@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'internetProject.apps.InternetprojectConfig',
+    'currency_exchange.apps.CurrencyExchangeConfig',
 ]
 
 MIDDLEWARE = [
