@@ -126,3 +126,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EXCHANGE_RATE_API_KEY = '81a39e2bc8094decbe82584f7531b4f5'
+
+STATICFILES_DIRS = [
+    BASE_DIR , "static", # Added the static file path for using the static folder in the project
+]
