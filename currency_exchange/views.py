@@ -36,3 +36,6 @@ def get_exchange_rate(from_currency, to_currency):
     #     print("Timeout Error:", errt)
     # except requests.exceptions.RequestException as err:
     #     print("Oops: Something Else", err)
+
+def index(request):
+    return render(request,"index.html")

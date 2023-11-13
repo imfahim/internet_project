@@ -4,4 +4,5 @@ from currency_exchange import views
 
 urlpatterns = [
     path(r'currency/<str:from_currency>/<str:to_currency>/', views.currency, name='currency'),
+    path(r'index/', views.index, name='index'),
 ]
