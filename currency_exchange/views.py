@@ -39,3 +39,8 @@ def get_exchange_rate(from_currency, to_currency):
 
 def index(request):
     return render(request,"index.html")
+
+
+
+def payment(request):
+    return render(request,"payment.html")
