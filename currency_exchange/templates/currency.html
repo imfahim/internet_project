@@ -1,11 +1,18 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Currency Exchange</title>
+    <!-- 引入Chart.js库 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-{{ rate }}
-
+    <!-- 显示实时汇率 -->
+    <div>Current Rate: <span id="currentRate">Loading...</span></div>
+    <!-- 图表容器 -->
+    <canvas id="rateChart"></canvas>
+    <!-- 引入自定义脚本 -->
+    <script src="{% static 'js/currencyTable.js' %}"></script>
 </body>
 </html>
