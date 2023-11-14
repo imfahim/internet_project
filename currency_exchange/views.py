@@ -5,12 +5,13 @@ import requests
 
 
 # Create your views here.
-def currency(request, from_currency, to_currency):
-    rate = get_exchange_rate(from_currency, to_currency)
-    return JsonResponse({'rate': rate})
+def currency(request, from_currency):
+    rate = get_exchange_rate(from_currency)
 
+    # return JsonResponse({'rate': rate})
+    return render(request, 'currency.html', {'rate': rate})
 
-def get_exchange_rate(from_currency, to_currency):
+def get_exchange_rate(from_currency):
     # 假设您已将API密钥存储在Django的settings文件中
     api_key = settings.EXCHANGE_RATE_API_KEY
     url = f"https://openexchangerates.org/api/latest.json?app_id={api_key}"
@@ -23,7 +24,7 @@ def get_exchange_rate(from_currency, to_currency):
 
     # 解析JSON数据以获取汇率
     rates = data.get('rates', {})
-    rate = rates.get(to_currency)
+    rate = rates.get(from_currency)
     if rate:
         return rate
     else:
