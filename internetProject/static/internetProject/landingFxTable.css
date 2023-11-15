@@ -1,0 +1,30 @@
+/* Add your custom styles for the table here */
+table {
+    width: 100%;
+    margin-top: 5%;
+}
+
+th, td {
+    text-align: center;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.info-icon {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.fas{
+    margin-right: 5px;
+}
+
+.positiveChange {
+   color: green;
+}
+
+.negativeChange {
+   color: red;
+}
