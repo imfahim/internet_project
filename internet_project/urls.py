@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from internetProject import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('index/', views.index),
     path(r'currency_exchange/', include('currency_exchange.urls')),
 ]
