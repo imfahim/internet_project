@@ -48,3 +48,19 @@ def get_exchange_rate(from_currency, to_currency):
         return rate
     else:
         raise ValueError("Currency not found.")
+    # except requests.exceptions.HTTPError as errh:
+    #     print("Http Error:", errh)
+    # except requests.exceptions.ConnectionError as errc:
+    #     print("Error Connecting:", errc)
+    # except requests.exceptions.Timeout as errt:
+    #     print("Timeout Error:", errt)
+    # except requests.exceptions.RequestException as err:
+    #     print("Oops: Something Else", err)
+
+def index(request):
+    return render(request,"index.html")
+
+
+
+def payment(request):
+    return render(request,"payment.html")
