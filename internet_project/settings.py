@@ -120,3 +120,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 EXCHANGE_RATE_API_KEY = 'fdaacc91c4f89786b14f193e53821e1bee6f29209215ef67d6c6bf07ccfc0ddd'
+
+STATICFILES_DIRS = [
+    BASE_DIR, "static",
+]
