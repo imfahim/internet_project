@@ -1,15 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>internetProject</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Market Table</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}">
 </head>
 <body>
 
-    {% for message in messages %}
+{% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
         <strong>Message</strong> {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -29,6 +30,79 @@
     <button type="submit"><a href="/signup">SignUp</a></button>
     <button type="submit"><a href="/signin">SignIn</a></button>
     {% endif %}
+    <div class="container">
+        <h2>Welcome to Fx Trade</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>
+                        #
+                    </th>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                       <th>
+                        1h %
+                       </th>
+                       <th>
+                        2h %
+                    </th>
+                       <th>
+                        7d %
+                    </th>
+                    <th>
+                        Market Cap
+                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="The total market value of a cryptocurrency's circulating supply. It is analogous to the free-float capitalization in the stock market.">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </th>
+                    <th>
+                        Volume(24h)
+                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="A measure of how much of a cryptocurrency was traded in the last 24 hours.">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </th>
+                    <th>
+                        Circulating Supply
+                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.">
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </th>
 
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Add your table data here -->
+          {% for rowData in fxTableData %}
+            <tr>
+               <td>{{ rowData.id }}</td>
+               <td>{{ rowData.Name }}</td>
+               <td>{{ rowData.Price }}</td>
+               <td class={{ rowData.changeStatus }}>{{ rowData.oneHrPer }}</td>
+               <td class={{ rowData.changeStatus }}>{{ rowData.twoHrPer }}</td>
+               <td class={{ rowData.changeStatus }}>{{ rowData.sevenDayPer }}</td>
+               <td>{{ rowData.Market_Cap }}</td>
+                <td>{{ rowData.Volume_24h }}</td>
+               <td>{{ rowData.Circulating_Supply }}</td>
+            </tr>
+          {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+  <!--#Adding External Libraries -->
+    <script src="https://kit.fontawesome.com/d7f9ddb8cd.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
 </body>
 </html>
