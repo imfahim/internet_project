@@ -3,13 +3,13 @@ let rateChart;
 let chartData = {
     labels: [], // X轴的标签数组
     datasets: [{
-        label: `${fromCurrency}to${toCurrency}`,
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgb(255, 99, 132)',
+        label: `${fromCurrency} to ${toCurrency}`,
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgb(54, 162, 235)',
         data: [] // Y轴的数据数组
     }]
 };
-
+let currentRate = 0;
 // 当DOM完全加载后初始化图表
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('rateChart').getContext('2d');
@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
         type: 'line',
         data: chartData,
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     ticks: {
@@ -57,6 +59,9 @@ ws.onmessage = function (event) {
     const response = JSON.parse(event.data);
     // 确保是我们订阅的汇率更新消息
     if (response.TYPE === "5" && response.PRICE) {
+        currentRate = response.PRICE;
+        document.getElementById('currentRate').innerText = currentRate;
+        calculate();
         // 获取当前时间
         const now = new Date();
         // 格式化时间为 'YYYY-MM-DD HH:mm' 的格式
@@ -89,10 +94,26 @@ ws.onerror = function (error) {
     console.error('WebSocket Error:', error);
 };
 ws.onclose = function (event) {
-    // 在连接关闭时处理事件，考虑重新连接
+
     console.log('WebSocket connection closed: ', event);
-    // 等待5秒后重新连接
+
     setTimeout(function () {
         ws = new WebSocket(`wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`);
     }, 5000);
 };
+
+function calculate() {
+
+    const amountElement = document.getElementById('amount');
+    const amount = amountElement.value;
+
+
+    if (amount !== '' && currentRate) {
+        const result = amount * currentRate;
+
+        document.getElementById('result').innerText = `${result} ${toCurrency}`; // 保留两位小数
+    } else {
+
+        document.getElementById('result').innerText = `NaN ${toCurrency}`;
+    }
+}

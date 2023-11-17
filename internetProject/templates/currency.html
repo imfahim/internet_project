@@ -7,6 +7,7 @@
     <title>Currency Exchange</title>
     <!-- import Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'css/currencyTable.css' %}">
 </head>
 <script type="text/javascript">
     const fromCurrency = "{{ from_currency }}";
@@ -16,8 +17,13 @@
 <body>
 <!-- display real time rate -->
 <div>Current Rate: <span id="currentRate">Loading...</span></div>
+
+<input type="number" id="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}
+<div id="result"></div>
 <!-- chart container -->
-<canvas id="rateChart"></canvas>
+<div id="chartContainer" >
+    <canvas id="rateChart"></canvas>
+</div>
 <!-- import javascript currencyTable.js -->
 <script src="{% static 'js/currencyTable.js' %}"></script>
 
