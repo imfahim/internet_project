@@ -1539,9 +1539,9 @@ ol {
   .header {
     padding: 18px 0 !important;
   }
-  .header .mobile-menu-btn .toggler-icon {
-    background-color: #fff;
-  }
+  /*.header .mobile-menu-btn .toggler-icon {*/
+  /*  background-color: #fff;*/
+  /*}*/
   .header .button {
     margin: 0 !important;
   }

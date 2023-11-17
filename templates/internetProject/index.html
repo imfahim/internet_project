@@ -1,14 +1,19 @@
-<!DOCTYPE html>
+{#<!DOCTYPE html>#}
+{#{% load static %}#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>Forex Market Table</title>#}
+{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+{#    <link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}">#}
+{#</head>#}
+{#<body>#}
+
+{% extends 'templates/base.html' %}
+{% block content %}
 {% load static %}
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forex Market Table</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}">
-</head>
-<body>
+   <section class="section">
 
 {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -93,6 +98,8 @@
         </table>
     </div>
 
+    </section>
+
   <!--#Adding External Libraries -->
     <script src="https://kit.fontawesome.com/d7f9ddb8cd.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -104,5 +111,7 @@
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-</body>
-</html>
+{% endblock%}
+
+{#</body>#}
+{#</html>#}

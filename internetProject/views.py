@@ -12,7 +12,7 @@ from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
 from datetime import datetime
-import pytz
+# import pytz
 import requests
 
 from internet_project import settings
