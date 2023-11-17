@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('internetProject.urls')),
     path('index/', views.index),
-    path(r'currency_exchange/', include('currency_exchange.urls')),
+
 ]

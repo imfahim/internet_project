@@ -11,5 +11,8 @@ urlpatterns = [
     path('signin', views.signin, name='signin'),
     path('signout', views.signout, name='signout'),
     path('activate/<uidb64>/<token>', views.activate, name="activate"),
+    path('currency/<str:from_currency>/<str:to_currency>/', views.currency, name='currency'),
+    path('index_jk/', views.index_jk, name='index_jk'),
+    path('payment/', views.payment, name='payment'),
 ]
     
