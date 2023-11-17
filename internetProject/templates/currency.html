@@ -1,0 +1,26 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Currency Exchange</title>
+    <!-- import Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<script type="text/javascript">
+    const fromCurrency = "{{ from_currency }}";
+    const toCurrency = "{{ to_currency }}";
+    // You can now use fromCurrency and toCurrency in your JavaScript code
+</script>
+<body>
+<!-- display real time rate -->
+<div>Current Rate: <span id="currentRate">Loading...</span></div>
+<!-- chart container -->
+<canvas id="rateChart"></canvas>
+<!-- import javascript currencyTable.js -->
+<script src="{% static 'js/currencyTable.js' %}"></script>
+
+</body>
+</html>
+
