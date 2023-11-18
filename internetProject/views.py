@@ -174,6 +174,19 @@ def signin(request):
     return render(request, "internetProject/signin.html")
 
 
+def about_us(request):
+    return render(request, "about-us.html")
+
+def faq(request):
+    return render(request, "faq.html")
+
+def terms(request):
+    return render(request, "terms.html")
+
+
+
+
+
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!")
