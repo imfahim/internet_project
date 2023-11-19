@@ -1,0 +1,35 @@
+{#<!-- complaints/templates/complaints/complaint_form.html -->#}
+{#{% extends 'base.html' %}#}
+{##}
+{#{% block content %}#}
+{#    <h2>Submit a Complaint</h2>#}
+{#    <form method="post"  action="{% url 'internetProject:complaint_form' %}">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit">Submit</button>#}
+{#    </form>#}
+{#{% endblock %}#}
+{##}
+{##}
+
+<!-- complaints/templates/complaints/complaint_form.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Submit a Complaint</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="post" action="{% url  'internetProject:complaint_form' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+         <input type="submit" value="Submit">
+    </form>
+{% endblock %}
+

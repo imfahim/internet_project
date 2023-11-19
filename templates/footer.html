@@ -58,13 +58,25 @@
                             <div class="single-footer newsletter">
                                 <h3>Subscribe</h3>
                                 <p>Subscribe to our newsletter for the latest updates</p>
-                                <form action="#" method="get" target="_blank" class="newsletter-form">
-                                    <input name="EMAIL" placeholder="Email address" required="required" type="email">
-                                    <div class="button">
-                                        <button class="sub-btn"><i class="lni lni-envelope"></i>
-                                        </button>
-                                    </div>
+                                <form method="post" action="{% url 'internetProject:send_email' %} " class="newsletter-form">
+                                {% csrf_token %}
+                                    <label>
+                                        <input type="email" name="email" placeholder="Enter your email">
+                                    </label>
+                                     <div class="button">
+                                     <button class="sub-btn"><i class="lni lni-envelope"></i></button>
+                                     </div>
                                 </form>
+{#                                <form method="post" action="{% url 'internetProject:send_email' %}" target="_blank" class="newsletter-form">#}
+{#                                {% csrf_token %}#}
+{#                                    <label>#}
+{#                                        <input name="email_address" placeholder="Email address" required="required" type="email">#}
+{#                                    </label>#}
+{#                                    <div class="button">#}
+{#                                 <button class="sub-btn"><i class="lni lni-envelope"></i></button>#}
+{#                                 </div>#}
+{#                                </form>#}
+
                             </div>
                             <!-- End Single Widget -->
                         </div>
