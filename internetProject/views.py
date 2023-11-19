@@ -240,3 +240,12 @@ def index_jk(request):
 
 def payment(request):
     return render(request, "templates/payment.html")
+
+def payment_done(request):
+    if request.method == 'POST':
+        print(request.POST.get('name'))
+        name = request.POST.get('name')
+        data = {
+            'name':name,
+        }
+        return render(request, "templates/payment/payment-done.html",data)

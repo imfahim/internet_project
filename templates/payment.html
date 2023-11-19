@@ -1,12 +1,23 @@
 {%  extends 'templates/base.html' %}
 
-
-{% block content %}
 {% block title %}Payment{% endblock %}
 
+{% block content %}
+
     <section class="feature section">
-        <h1 style="margin:2em">
-            Hello Jaykishan
-        </h1>
+        <h3 class="my-5">Payment</h3>
+            <form action="{% url 'internetProject:payment_done' %}" method="post">
+                {% csrf_token %}
+                <label for="">Username</label>
+                <input type="text" id="username" name="name" placeholder="Enter your name" Required>
+                <br>
+
+                <label for="">Password</label>
+                <input type="password" id="pass1" name="pass1" placeholder="Enter your password" Required>
+                <br>
+
+
+                <button type="submit">Sign In</button>
+            </form>
     </section>
 {% endblock%}
