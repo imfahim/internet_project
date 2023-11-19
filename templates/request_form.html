@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Deletion Request</title>
+</head>
+<body>
+
+<h1>Submit a Request</h1>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <h2>Please carefully review all the options and select the correct form type to ensure that your request is directed to the appropriate team. Provide well-structured, actionable, and complete information.</h2>
+
+    <!-- Select box for form type -->
+    <label for="form_type">Select Form Type:</label>
+    <select name="form_type" id="form_type" onchange="showFormFields()">
+        <option value="option1">Report a Bug</option>
+        <option value="option2">Feedback, Questions, Complaint</option>
+        <option value="option3">Feature Request</option>
+    </select>
+
+    <!-- Form fields for option 1 -->
+    <div id="option1Fields" style="display: none;">
+        <label for="bug_description">Bug Description:</label>
+        <label for="email">Your Email Address:</label>
+        <input type="email" name="email" id="email" required>
+        <textarea name="bug_description" id="bug_description" required></textarea>
+    </div>
+
+    <!-- Form fields for option 2 -->
+    <div id="option2Fields" style="display: none;">
+        <label for="feedback">Feedback/Complaint:</label>
+        <label for="email">Your Email Address:</label>
+        <input type="email" name="email" id="email" required>
+        <textarea name="feedback" id="feedback" required></textarea>
+    </div>
+
+    <!-- Form fields for option 3 -->
+    <div id="option3Fields" style="display: none;">
+        <label for="feature_request">Feature Request:</label>
+        <label for="email">Your Email Address:</label>
+        <input type="email" name="email" id="email" required>
+        <input type="text" name="feature_request" id="feature_request" required>
+    </div>
+
+    <!-- Your existing form fields can go here -->
+
+    <!-- Submit button -->
+    <button type="submit">Submit Request</button>
+
+</form>
+
+<script>
+    function showFormFields() {
+        var select = document.getElementById("form_type");
+        var option1Fields = document.getElementById("option1Fields");
+        var option2Fields = document.getElementById("option2Fields");
+        var option3Fields = document.getElementById("option3Fields");
+
+        option1Fields.style.display = (select.value === "option1") ? "block" : "none";
+        option2Fields.style.display = (select.value === "option2") ? "block" : "none";
+        option3Fields.style.display = (select.value === "option3") ? "block" : "none";
+    }
+</script>
+
+</body>
+</html>

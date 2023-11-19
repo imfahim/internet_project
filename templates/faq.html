@@ -1,144 +1,9 @@
-{#{% extends 'templates/base.html' %}#}
-{##}
-{#{% block content %}#}
-{#  {% load static %}#}
-{##}
-{#  <section class="faq">#}
-{#    <div class="container">#}
-{#      <div class="row">#}
-{#        <div class="col-md-8">#}
-{##}
-{#          <!-- FAQ List -->#}
-{#          <div class="accordion" id="faqAccordion">#}
-{##}
-{#            <!-- FAQ Item 1 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading1">#}
-{#                <h2 class="mb-0">#}
-{#                  How are the prices calculated for the various cryptocurrencies?#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse1" class="collapse show" aria-labelledby="faqHeading1" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  Prices are calculated based on#}
-{#                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">#}
-{#                    market data#}
-{#                  </button>, taking into account the latest trades on various cryptocurrency exchanges. Refer to the Market Data section of the methodology for detailed information.#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- FAQ Item 2 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading2">#}
-{#                <h2 class="mb-0">#}
-{#                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">#}
-{#                    What is "Market Capitalization" and how is it calculated?#}
-{#                  </button>#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  Market Capitalization is calculated by multiplying the Price by the Circulating Supply. It provides a measure of the relative size of a cryptocurrency in the market.#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- FAQ Item 3 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading3">#}
-{#                <h2 class="mb-0">#}
-{#                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">#}
-{#                    What is the difference between "Circulating Supply", "Total Supply", and "Max Supply"?#}
-{#                  </button>#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse3" class="collapse" aria-labelledby="faqHeading3" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  <p><strong>Circulating Supply:</strong> The number of coins in the market.</p>#}
-{#                  <p><strong>Total Supply:</strong> The total existing coins (minus burned coins).</p>#}
-{#                  <p><strong>Max Supply:</strong> The maximum coins that will ever exist.</p>#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- FAQ Item 4 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading4">#}
-{#                <h2 class="mb-0">#}
-{#                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">#}
-{#                    Why is the Circulating Supply used in determining the market capitalization instead of Total Supply?#}
-{#                  </button>#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse4" class="collapse" aria-labelledby="faqHeading4" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  Circulating Supply is used because it represents the coins actively in the market, excluding locked or reserved coins that can't impact the price.#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- FAQ Item 5 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading5">#}
-{#                <h2 class="mb-0">#}
-{#                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">#}
-{#                    Do you offer an API for your data?#}
-{#                  </button>#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse5" class="collapse" aria-labelledby="faqHeading5" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  Yes! Check out the CoinMarketCap API for accessing our data programmatically and integrating it into your projects.#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- FAQ Item 6 -->#}
-{#            <div class="card mb-2">#}
-{#              <div class="card-header" id="faqHeading6">#}
-{#                <h2 class="mb-0">#}
-{#                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse6" aria-expanded="false" aria-controls="faqCollapse6">#}
-{#                    How can I use content (screenshots, data, graphs, etc.) for my personal projects and/or commercial use?#}
-{#                  </button>#}
-{#                </h2>#}
-{#              </div>#}
-{#              <div id="faqCollapse6" class="collapse" aria-labelledby="faqHeading6" data-parent="#faqAccordion">#}
-{#                <div class="card-body">#}
-{#                  You may use the content for academic or journalistic use, citing coinmarketcap.com as a source. Refer to the Terms of Use for commercial use guidelines.#}
-{#                </div>#}
-{#              </div>#}
-{#            </div>#}
-{##}
-{#            <!-- Add more FAQ items with answers as needed -->#}
-{##}
-{#          </div>#}
-{#          <!-- End FAQ List -->#}
-{##}
-{#        </div>#}
-{##}
-{#        <!-- Additional Content or Sidebar -->#}
-{#        <div class="col-md-4">#}
-{#          <!-- Add additional content, links, or sidebar information as needed -->#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
-{#  </section>#}
-{#{% endblock %}#}
+{% extends 'templates/base.html' %}
 
-    <!DOCTYPE html>
-<html lang="en">
+{% block content %}
+  {% load static %}
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Frequently Asked Questions</title>
-  <!-- Include any necessary CSS or meta tags here -->
-</head>
-
-<body>
-
-  <section class="faq">
+<section class="call-action">">
     <div class="container">
       <div class="row">
         <div class="col-md-8">
@@ -155,7 +20,10 @@
               </div>
               <div id="faqCollapse1" class="collapse show" aria-labelledby="faqHeading1" data-parent="#faqAccordion">
                 <div class="card-body">
-                  Please refer to the Market Data section of the methodology for detailed information on this topic.
+                  Prices are calculated based on
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1">
+                    market data
+                  </button>, taking into account the latest trades on various cryptocurrency exchanges. Refer to the Market Data section of the methodology for detailed information.
                 </div>
               </div>
             </div>
@@ -164,14 +32,14 @@
             <div class="card mb-2">
               <div class="card-header" id="faqHeading2">
                 <h2 class="mb-0">
-                  What is "Market Capitalization" and how is it calculated?
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2">
+                    What is "Market Capitalization" and how is it calculated?
+                  </button>
                 </h2>
               </div>
               <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">
                 <div class="card-body">
-                  Market Capitalization is one way to rank the relative size of a cryptocurrency. It's calculated by multiplying the Price by the Circulating Supply.
-                  <br>
-                  Market Cap = Price X Circulating Supply.
+                  Market Capitalization is calculated by multiplying the Price by the Circulating Supply. It provides a measure of the relative size of a cryptocurrency in the market.
                 </div>
               </div>
             </div>
@@ -180,16 +48,16 @@
             <div class="card mb-2">
               <div class="card-header" id="faqHeading3">
                 <h2 class="mb-0">
-                  What is the difference between "Circulating Supply", "Total Supply", and "Max Supply"?
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3">
+                    What is the difference between "Circulating Supply", "Total Supply", and "Max Supply"?
+                  </button>
                 </h2>
               </div>
               <div id="faqCollapse3" class="collapse" aria-labelledby="faqHeading3" data-parent="#faqAccordion">
                 <div class="card-body">
-                  Circulating Supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.
-                  <br>
-                  Total Supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).
-                  <br>
-                  Max Supply is the best approximation of the maximum amount of coins that will ever exist in the lifetime of the cryptocurrency.
+                  <p><strong>Circulating Supply:</strong> The number of coins in the market.</p>
+                  <p><strong>Total Supply:</strong> The total existing coins (minus burned coins).</p>
+                  <p><strong>Max Supply:</strong> The maximum coins that will ever exist.</p>
                 </div>
               </div>
             </div>
@@ -198,12 +66,14 @@
             <div class="card mb-2">
               <div class="card-header" id="faqHeading4">
                 <h2 class="mb-0">
-                  Why is the Circulating Supply used in determining the market capitalization instead of Total Supply?
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4">
+                    Why is the Circulating Supply used in determining the market capitalization instead of Total Supply?
+                  </button>
                 </h2>
               </div>
               <div id="faqCollapse4" class="collapse" aria-labelledby="faqHeading4" data-parent="#faqAccordion">
                 <div class="card-body">
-                  We've found that Circulating Supply is a much better metric for determining the market capitalization. Coins that are locked, reserved, or not able to be sold on the public market are coins that can't affect the price and thus should not be allowed to affect the market capitalization as well. The method of using the Circulating Supply is analogous to the method of using public float for determining the market capitalization of companies in traditional investing.
+                  Circulating Supply is used because it represents the coins actively in the market, excluding locked or reserved coins that can't impact the price.
                 </div>
               </div>
             </div>
@@ -212,14 +82,14 @@
             <div class="card mb-2">
               <div class="card-header" id="faqHeading5">
                 <h2 class="mb-0">
-                  What is the difference between a "Coin" and a "Token" on the site?
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5">
+                    Do you offer an API for your data?
+                  </button>
                 </h2>
               </div>
               <div id="faqCollapse5" class="collapse" aria-labelledby="faqHeading5" data-parent="#faqAccordion">
                 <div class="card-body">
-                  A Coin is a cryptocurrency that can operate independently.
-                  <br>
-                  A Token is a cryptocurrency that depends on another cryptocurrency as a platform to operate. Check out the crypto tokens listings to view a list of tokens and their respective platforms.
+                  Yes! Check out the CoinMarketCap API for accessing our data programmatically and integrating it into your projects.
                 </div>
               </div>
             </div>
@@ -228,152 +98,14 @@
             <div class="card mb-2">
               <div class="card-header" id="faqHeading6">
                 <h2 class="mb-0">
-                  What is the criteria for a cryptocurrency or exchange to be listed on CoinMarketCap?
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#faqCollapse6" aria-expanded="false" aria-controls="faqCollapse6">
+                    How can I use content (screenshots, data, graphs, etc.) for my personal projects and/or commercial use?
+                  </button>
                 </h2>
               </div>
               <div id="faqCollapse6" class="collapse" aria-labelledby="faqHeading6" data-parent="#faqAccordion">
                 <div class="card-body">
-                  Please refer to the Listings Criteria section of the methodology for detailed information on this topic.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 7 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading7">
-                <h2 class="mb-0">
-                  Why are markets with no fees excluded from the price average and total trading volume?
-                </h2>
-              </div>
-              <div id="faqCollapse7" class="collapse" aria-labelledby="faqHeading7" data-parent="#faqAccordion">
-                <div class="card-body">
-                  When no fees are being charged at the exchange, it is possible for a trader (or bot) to trade back and forth with themselves and generate a lot of "fake" volume without penalty. It's impossible to determine how much of the volume is fake, so we exclude it entirely from the calculations.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 8 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading8">
-                <h2 class="mb-0">
-                  Why I no longer see the affiliate links for Exchanges on CoinMarketCap?
-                </h2>
-              </div>
-              <div id="faqCollapse8" class="collapse" aria-labelledby="faqHeading8" data-parent="#faqAccordion">
-                <div class="card-body">
-                  We discontinued the Affiliate Program due to compliance reasons. Hence, the affiliate links to all the Affiliate Program participant exchanges were removed.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 9 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading9">
-                <h2 class="mb-0">
-                  How do I purchase cryptocurrency?
-                </h2>
-              </div>
-              <div id="faqCollapse9" class="collapse" aria-labelledby="faqHeading9" data-parent="#faqAccordion">
-                <div class="card-body">
-                  CoinMarketCap reports on the trading activities of thousands of markets but does not directly sell any cryptocurrency. The best way to find where to buy is by looking on the markets section for the cryptocurrency. For example, to find where to buy Bitcoin, you can look at the markets section for Bitcoin.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 10 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading10">
-                <h2 class="mb-0">
-                  In what time zone is the site based?
-                </h2>
-              </div>
-              <div id="faqCollapse10" class="collapse" aria-labelledby="faqHeading10" data-parent="#faqAccordion">
-                <div class="card-body">
-                  Data is collected, recorded, and reported in UTC time unless otherwise specified.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 11 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading11">
-                <h2 class="mb-0">
-                  At what time is the 24 hour % change based?
-                </h2>
-              </div>
-              <div id="faqCollapse11" class="collapse" aria-labelledby="faqHeading11" data-parent="#faqAccordion">
-                <div class="card-body">
-                  It's based on the current time. It's a rolling 24 hour period.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 12 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading12">
-                <h2 class="mb-0">
-                  Why are you listing [insert random cryptocurrency]? It's clearly a scam!
-                </h2>
-              </div>
-              <div id="faqCollapse12" class="collapse" aria-labelledby="faqHeading12" data-parent="#faqAccordion">
-                <div class="card-body">
-                  Nearly every cryptocurrency has been called a scam at some point in its lifetime. We're not here to judge the merits of any cryptocurrency, but we provide the best tools for you to make your own conclusions. As long as it meets the listing criteria, it's eligible to be on the site.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 13 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading13">
-                <h2 class="mb-0">
-                  Why aren't you listing [insert random cryptocurrency]?
-                </h2>
-              </div>
-              <div id="faqCollapse13" class="collapse" aria-labelledby="faqHeading13" data-parent="#faqAccordion">
-                <div class="card-body">
-                  While we strive to add every single cryptocurrency in the universe, it's virtually impossible to list everything. Listing cryptocurrencies is largely a manual process that takes time and resources to ensure the accuracy of our data. Please refer to the Listings Criteria section of the methodology for detailed information on this topic.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 14 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading14">
-                <h2 class="mb-0">
-                  Do you offer an API for your data?
-                </h2>
-              </div>
-              <div id="faqCollapse14" class="collapse" aria-labelledby="faqHeading14" data-parent="#faqAccordion">
-                <div class="card-body">
-                  Yes! Check out the CoinMarketCap API.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 15 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading15">
-                <h2 class="mb-0">
-                  Am I allowed to use content (screenshots, data, graphs, etc.) for one of my personal projects and/or commercial use?
-                </h2>
-              </div>
-              <div id="faqCollapse15" class="collapse" aria-labelledby="faqHeading15" data-parent="#faqAccordion">
-                <div class="card-body">
-                  You may use the content for academic or journalistic use provided that you cite coinmarketcap.com as a source. Please refer to the Terms of Use for the website.
-                </div>
-              </div>
-            </div>
-
-            <!-- FAQ Item 16 -->
-            <div class="card mb-2">
-              <div class="card-header" id="faqHeading16">
-                <h2 class="mb-0">
-                  Why does a question mark sometimes show up for the circulating supply and market cap of a cryptocurrency?
-                </h2>
-              </div>
-              <div id="faqCollapse16" class="collapse" aria-labelledby="faqHeading16" data-parent="#faqAccordion">
-                <div class="card-body">
-                  In order to ensure accurate market cap rankings, we work closely with teams and developers to verify supply details on their respective blockchains. If a question mark shows up, it means that we have not sufficiently verified the circulating supply and resulting market cap yet.
+                  You may use the content for academic or journalistic use, citing coinmarketcap.com as a source. Refer to the Terms of Use for commercial use guidelines.
                 </div>
               </div>
             </div>
@@ -392,9 +124,157 @@
       </div>
     </div>
   </section>
+{% endblock %}
 
-  <!-- Include any necessary JavaScript or scripts here -->
-
-</body>
-
-</html>
+{#      <!DOCTYPE html>#}
+{#<html lang="en">#}
+{##}
+{#<head>#}
+{#  <meta charset="UTF-8">#}
+{#  <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#  <title>Frequently Asked Questions</title>#}
+{#  <!-- Include any necessary CSS or meta tags here -->#}
+{#</head>#}
+{##}
+{#<body>#}
+{##}
+{#  <section class="faq">#}
+{#    <div class="container">#}
+{#      <div class="row">#}
+{#        <div class="col-md-8">#}
+{##}
+{#          <!-- FAQ List -->#}
+{#          <div class="accordion" id="faqAccordion">#}
+{##}
+{#            <!-- FAQ Item 1 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading1">#}
+{#                <h2 class="mb-0">#}
+{#                  How are the prices calculated for the various cryptocurrencies?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse1" class="collapse show" aria-labelledby="faqHeading1" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  Please refer to the Market Data section of the methodology for detailed information on this topic.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 2 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading2">#}
+{#                <h2 class="mb-0">#}
+{#                  What is "Market Capitalization" and how is it calculated?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse2" class="collapse" aria-labelledby="faqHeading2" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  Market Capitalization is one way to rank the relative size of a cryptocurrency. It's calculated by multiplying the Price by the Circulating Supply.#}
+{#                  <br>#}
+{#                  Market Cap = Price X Circulating Supply.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 3 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading3">#}
+{#                <h2 class="mb-0">#}
+{#                  What is the difference between "Circulating Supply", "Total Supply", and "Max Supply"?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse3" class="collapse" aria-labelledby="faqHeading3" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  Circulating Supply is the best approximation of the number of coins that are circulating in the market and in the general public's hands.#}
+{#                  <br>#}
+{#                  Total Supply is the total amount of coins in existence right now (minus any coins that have been verifiably burned).#}
+{#                  <br>#}
+{#                  Max Supply is the best approximation of the maximum amount of coins that will ever exist in the lifetime of the cryptocurrency.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 4 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading4">#}
+{#                <h2 class="mb-0">#}
+{#                  Why is the Circulating Supply used in determining the market capitalization instead of Total Supply?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse4" class="collapse" aria-labelledby="faqHeading4" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  We've found that Circulating Supply is a much better metric for determining the market capitalization. Coins that are locked, reserved, or not able to be sold on the public market are coins that can't affect the price and thus should not be allowed to affect the market capitalization as well. The method of using the Circulating Supply is analogous to the method of using public float for determining the market capitalization of companies in traditional investing.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 5 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading5">#}
+{#                <h2 class="mb-0">#}
+{#                  What is the difference between a "Coin" and a "Token" on the site?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse5" class="collapse" aria-labelledby="faqHeading5" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  A Coin is a cryptocurrency that can operate independently.#}
+{#                  <br>#}
+{#                  A Token is a cryptocurrency that depends on another cryptocurrency as a platform to operate. Check out the crypto tokens listings to view a list of tokens and their respective platforms.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 6 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading6">#}
+{#                <h2 class="mb-0">#}
+{#                  What is the criteria for a cryptocurrency or exchange to be listed on CoinMarketCap?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse6" class="collapse" aria-labelledby="faqHeading6" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  Please refer to the Listings Criteria section of the methodology for detailed information on this topic.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 7 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading7">#}
+{#                <h2 class="mb-0">#}
+{#                  Why are markets with no fees excluded from the price average and total trading volume?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse7" class="collapse" aria-labelledby="faqHeading7" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  When no fees are being charged at the exchange, it is possible for a trader (or bot) to trade back and forth with themselves and generate a lot of "fake" volume without penalty. It's impossible to determine how much of the volume is fake, so we exclude it entirely from the calculations.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 8 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading8">#}
+{#                <h2 class="mb-0">#}
+{#                  Why I no longer see the affiliate links for Exchanges on CoinMarketCap?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse8" class="collapse" aria-labelledby="faqHeading8" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  We discontinued the Affiliate Program due to compliance reasons. Hence, the affiliate links to all the Affiliate Program participant exchanges were removed.#}
+{#                </div>#}
+{#              </div>#}
+{#            </div>#}
+{##}
+{#            <!-- FAQ Item 9 -->#}
+{#            <div class="card mb-2">#}
+{#              <div class="card-header" id="faqHeading9">#}
+{#                <h2 class="mb-0">#}
+{#                  How do I purchase cryptocurrency?#}
+{#                </h2>#}
+{#              </div>#}
+{#              <div id="faqCollapse9" class="collapse" aria-labelledby="faqHeading9" data-parent="#faqAccordion">#}
+{#                <div class="card-body">#}
+{#                  CoinMarketCap reports on the trading activities of thousands of markets but does not#}
+{##}
+{##}

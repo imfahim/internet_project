@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from .forms import ComplaintForm
 from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
@@ -177,14 +179,33 @@ def signin(request):
 def about_us(request):
     return render(request, "about-us.html")
 
+
 def faq(request):
     return render(request, "faq.html")
+
 
 def terms(request):
     return render(request, "terms.html")
 
 
+def request_form(request):
+    return render(request, "request_form.html")
 
+
+def complaint_form(request):
+    msg=''
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        if form.is_valid():
+            form.save()
+            msg = 'You exceeded the number of levels for this course.'
+            return render(request, 'success.html', {'msg': msg})
+
+            # Create a success page
+    else:
+        form = ComplaintForm()
+
+    return render(request, 'complaint_form.html', {'form': form})
 
 
 def signout(request):

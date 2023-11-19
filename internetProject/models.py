@@ -10,3 +10,15 @@ class Currency_rate(models.Model):
 
     def __str__(self):
         return f"{self.from_currency} to {self.to_currency} rate is {self.rate} at {self.time}"
+
+
+class Complaint(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    attachment = models.FileField(upload_to='complaint_attachments/', blank=True, null=True)
+    email = models.EmailField()
+    contact_number = models.CharField(max_length=15)
+
+    def __str__(self):
+        return self.title
