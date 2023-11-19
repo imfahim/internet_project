@@ -10,3 +10,5 @@ class Currency_rate(models.Model):
 
     def __str__(self):
         return f"{self.from_currency} to {self.to_currency} rate is {self.rate} at {self.time}"
+
+# class Payment

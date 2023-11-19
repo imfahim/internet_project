@@ -21,7 +21,7 @@ from internetProject import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('internetProject.urls')),
+    path('',include('internetProject.urls'),name=''),
     path('index/', views.index),
 
 ]
