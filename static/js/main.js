@@ -23,14 +23,14 @@ Author: GrayGrids
         var header_navbar = document.querySelector(".navbar-area");
         var sticky = header_navbar.offsetTop;
 
-        var logo = document.querySelector('.navbar-brand img')
-        if (window.pageYOffset > sticky) {
-          header_navbar.classList.add("sticky");
-          logo.src = 'assets/images/logo/logo.svg';
-        } else {
-          header_navbar.classList.remove("sticky");
-          logo.src = 'assets/images/logo/white-logo.svg';
-        }
+        // var logo = document.querySelector('.navbar-brand img')
+        // if (window.pageYOffset > sticky) {
+        //   header_navbar.classList.add("sticky");
+        //   logo.src = 'assets/images/logo/logo.svg';
+        // } else {
+        //   header_navbar.classList.remove("sticky");
+        //   logo.src = 'assets/images/logo/white-logo.svg';
+        // }
 
         // show or hide the back-top-top button
         var backToTo = document.querySelector(".scroll-top");
