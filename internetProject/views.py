@@ -41,28 +41,29 @@ class CustomPasswordResetView(PasswordResetView):
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'internetProject/password_reset_done.html'
 
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name = 'internetProject/password_reset_confirm.html'
-    success_url = reverse_lazy('password_reset_complete')
-
 # class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 #     template_name = 'internetProject/password_reset_confirm.html'
 #     success_url = reverse_lazy('password_reset_complete')
-#
-#     def get(self, request, *args, **kwargs):
-#         # Extract uidb64 and token from the URL parameters
-#         uidb64 = kwargs.get('uidb64')
-#         token = kwargs.get('token')
-#
-#         # Check if uidb64 and token are not None
-#         if uidb64 is not None and token is not None:
-#             # Manually construct the URL for password_reset_confirm view
-#             reset_url = reverse('password_reset_confirm', args=[uidb64, token])
-#             return HttpResponse(f"The reset URL is: {reset_url}")
-#         else:
-#             # Handle the case where uidb64 or token is missing
-#             return HttpResponse("Invalid reset link")
 
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'internetProject/password_reset_confirm.html'
+    success_url = '/password_reset_complete/'
+
+    def get(self, request, *args, **kwargs):
+        uidb64 = self.kwargs.get('uidb64')
+        token = self.kwargs.get('token')
+
+        if uidb64 is not None and token is not None:
+            context = {'uidb64': uidb64, 'token': token}
+            return self.render_to_response(context)
+        else:
+            return HttpResponse("Invalid reset link")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['uidb64'] = self.kwargs.get('uidb64', '')
+        context['token'] = self.kwargs.get('token', '')
+        return context
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'internetProject/password_reset_complete.html'
 
