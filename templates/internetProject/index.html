@@ -92,7 +92,7 @@
           {% for rowData in fxTableData %}
             <tr>
                <td>{{ rowData.id }}</td>
-               <td>{{ rowData.Name }}</td>
+               <td><img src="{{ rowData.logo }}" alt="I" width="30" height="30">{{ rowData.Name }}</td>
                <td>{{ rowData.Price }}</td>
                 <td class={{ rowData.change1Status }}>{{ rowData.oneHrPer }}</td>
                <td class={{ rowData.change2Status }}>{{ rowData.twoHrPer }}</td>

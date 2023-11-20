@@ -51,19 +51,19 @@ def print_crypto_info(data):
 # Create your views here.
 def index(request):
     fxTableData = [
-        {'id': 1, 'Name': 'Bitcoin', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': -50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 2, 'Name': 'Bitcoin', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': 50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 3, 'Name': 'Bitcoin',  'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 1, 'Name': 'Bitcoin','logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': -50000,'twoHrPer': -50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
+        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': 50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
+        {'id': 3, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin',  'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin',  'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': -50000,
+        {'id': 4, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': -50000,
+         'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
+        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 5, 'Name': 'Bitcoin',  'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 6, 'Name': 'Bitcoin',  'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
-         'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 7, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer':50000,
+        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer':50000,
          'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
 
     ]
