@@ -16,6 +16,7 @@ from datetime import datetime
 import requests
 
 from internet_project import settings
+from .forms import PaymentForm
 
 
 # Create your views here.hghghg
@@ -239,12 +240,13 @@ def index_jk(request):
 
 
 def payment(request):
-    return render(request, "templates/payment.html")
+    form = PaymentForm()
+    return render(request, "templates/payment.html",{'form': form})
 
 def payment_done(request):
     if request.method == 'POST':
         print(request.POST.get('name'))
-        name = request.POST.get('name')
+        name = request.POST.items()
         data = {
             'name':name,
         }

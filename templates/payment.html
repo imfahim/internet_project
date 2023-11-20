@@ -16,38 +16,71 @@
                     <img src="" alt="image for the payment page">
                 </div>
                 <div class="col-7">
-                    <form action="{% url 'internetProject:payment_done' %}" method="post" class="my-auto">
-                        {% csrf_token %}
-                        <div class="form-group my-3">
-                            <label for="" class="form-">Card Number</label>
-                            <input class="form-control" type="text" id="card_number" name="card_number" placeholder="Card Number" Required>
+{#                    <form action="{% url 'internetProject:payment_done' %}" method="post" class="my-auto">#}
+{#                        {% csrf_token %}#}
+{#                        <div class="form-group my-3">#}
+{#                            <label for="" class="form-">Card Number</label>#}
+{#                            <input class="form-control" type="text" id="card_number" name="card_number" placeholder="Card Number" Required>#}
+{#                        </div>#}
+{##}
+{#                        <div class="row my-2">#}
+{#                            <div class="col">#}
+{#                              <input class="form-control" type="date" id="expiration_date" name="expiration_date" placeholder="Expiration Date Number" Required>#}
+{#                            </div>#}
+{#                            <div class="col">#}
+{#                              <input class="form-control" type="password" id="cvv" name="cvv" placeholder="CVV" Required>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{##}
+{##}
+{#                        <div class="form-group my-3">#}
+{#                            <label for="">First Name</label>#}
+{#                            <input class="form-control" type="text" id="firstname" name="firstname" placeholder="First name" Required>#}
+{#                        </div>#}
+{##}
+{#                        <div class="form-group my-3">#}
+{#                            <label for="">Last Name</label>#}
+{#                            <input class="form-control" type="text" id="firstname" name="Lastname" placeholder="Last Name" Required>#}
+{#                        </div>#}
+{##}
+{#                        <button type="submit" class="btn btn-primary ">Submit</button>#}
+{##}
+{#                    </form>#}
+                <form action="{% url 'internetProject:payment_done' %}" method="post" class="my-auto">
+                     {% csrf_token %}
+                      <div class="row mb-3">
+                        <div class="col">
+                          {{ form.first_name.label_tag }}
+                          {{ form.first_name }}
                         </div>
-
-                        <div class="row my-2">
-                            <div class="col">
-                              <input class="form-control" type="date" id="expiration_date" name="expiration_date" placeholder="Expiration Date Number" Required>
-                            </div>
-                            <div class="col">
-                              <input class="form-control" type="password" id="cvv" name="cvv" placeholder="CVV" Required>
-                            </div>
+                        <div class="col">
+                          {{ form.last_name.label_tag }}
+                          {{ form.last_name }}
                         </div>
-
-
-
-                        <div class="form-group my-3">
-                            <label for="">First Name</label>
-                            <input class="form-control" type="text" id="firstname" name="firstname" placeholder="First name" Required>
+                      </div>
+                      <div class="mb-3">
+                        {{ form.card_number.label_tag }}
+                        {{ form.card_number }}
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col">
+                          {{ form.card_expiry_month.label_tag }}
+                          {{ form.card_expiry_month }}
                         </div>
-
-                        <div class="form-group my-3">
-                            <label for="">Last Name</label>
-                            <input class="form-control" type="text" id="firstname" name="Lastname" placeholder="Last Name" Required>
+                        <div class="col">
+                          {{ form.card_expiry_year.label_tag }}
+                          {{ form.card_expiry_year }}
                         </div>
+                      </div>
+                      <div class="mb-3">
+                        {{ form.card_cvc.label_tag }}
+                        {{ form.card_cvc }}
+                      </div>
 
-                        <button type="submit" class="btn btn-primary ">Submit</button>
+                      <button type="submit" class="btn btn-primary btn-block">Submit Payment</button>
 
-                    </form>
-
+                </form>
                 </div>
             </div>
 
