@@ -11,6 +11,14 @@
 {#<body>#}
 
 {% extends 'templates/base.html' %}
+{% load static %}
+
+{% block styles %}
+{{ block.super }}
+<!-- Additional styles for this template -->
+<link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}" />
+{% endblock %}
+
 {% block content %}
 {% load static %}
    <section class="section">
@@ -86,9 +94,9 @@
                <td>{{ rowData.id }}</td>
                <td>{{ rowData.Name }}</td>
                <td>{{ rowData.Price }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.oneHrPer }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.twoHrPer }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.sevenDayPer }}</td>
+                <td class={{ rowData.change1Status }}>{{ rowData.oneHrPer }}</td>
+               <td class={{ rowData.change2Status }}>{{ rowData.twoHrPer }}</td>
+               <td class={{ rowData.change7Status }}>{{ rowData.sevenDayPer }}</td>
                <td>{{ rowData.Market_Cap }}</td>
                 <td>{{ rowData.Volume_24h }}</td>
                <td>{{ rowData.Circulating_Supply }}</td>
