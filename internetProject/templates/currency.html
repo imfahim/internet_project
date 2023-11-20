@@ -1,32 +1,33 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Currency Exchange</title>
-    <!-- import Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="{% static 'css/currencyTable.css' %}">
+    <title>Title</title>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <link rel="stylesheet" href="{% static 'css/currencyTable.css' %}">
 </head>
-<script type="text/javascript">
-    const fromCurrency = "{{ from_currency }}";
-    const toCurrency = "{{ to_currency }}";
-    // You can now use fromCurrency and toCurrency in your JavaScript code
-</script>
 <body>
-<!-- display real time rate -->
-<div>Current Rate: <span id="currentRate">Loading...</span></div>
-
-<input type="number" id="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}
-<div id="result"></div>
-<!-- chart container -->
-<div id="chartContainer" >
-    <canvas id="rateChart"></canvas>
+<div class="flex-container">
+    <div class="rate-info">
+        <h1>{{ from_currency }}: {{ latest_rate.close }} {{ to_currency }}</h1>
+        <button type="button">Pay Now</button>
+        <a href="{% url 'internetProject:currency_calculate' from_currency to_currency %}">
+            <button type="button" >Calculator</button>
+        </a>
+    </div>
+    <div class="chart-container">
+        <div style="width: 100%;">
+            <canvas id="rateCharMonth"></canvas>
+        </div>
+    </div>
 </div>
-<!-- import javascript currencyTable.js -->
-<script src="{% static 'js/currencyTable.js' %}"></script>
+<script>
+ const fromCurrency = "{{ from_currency }}";
+ const toCurrency = "{{ to_currency }}";
+ const historicalData = JSON.parse('{{ data | safe }}');
+</script>
 
+<script src="{% static 'js/currencyTableMonth.js' %}"></script>
 </body>
 </html>
-

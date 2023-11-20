@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse
@@ -196,9 +199,31 @@ def activate(request, uidb64, token):
         return render(request, 'activation_failed.html')
 
 
-def currency(request, from_currency, to_currency):
-    return render(request, 'currency.html', {'from_currency': from_currency, 'to_currency': to_currency})
+def currency_calculate(request, from_currency, to_currency):
+    return render(request, 'currency_calculate.html', {'from_currency': from_currency, 'to_currency': to_currency})
 
+
+def currency(request, from_currency, to_currency):
+    api_key = settings.EXCHANGE_RATE_API_KEY
+    url = 'https://min-api.cryptocompare.com/data/v2/histoday'
+
+    params = {
+        'fsym': from_currency,
+        'tsym': to_currency,
+        'limit': 30,
+        'api_key': api_key
+    }
+
+    response = requests.get(url, params=params)
+
+    if response.status_code == 200:
+        data = response.json()['Data']['Data']
+        latest_rate = data[-1]
+        data = json.dumps(data)
+        return render(request, 'currency.html',
+                      {'data': data, 'from_currency': from_currency, 'to_currency': to_currency, 'latest_rate': latest_rate})
+    else:
+        return render(request, 'currency.html', {'error': "Error fetching data"})
 
 
 def index_jk(request):

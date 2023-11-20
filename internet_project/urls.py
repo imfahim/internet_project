@@ -20,9 +20,9 @@ from django.views.generic import RedirectView
 from internetProject import views
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='internetProject/')),
-    path('admin/', admin.site.urls),
+    # path('', RedirectView.as_view(url='internetProject/')),
+    # path('admin/', admin.site.urls),
     path('',include('internetProject.urls')),
-    path('index/', views.index),
+    # path('index/', views.index),
 
 ]
