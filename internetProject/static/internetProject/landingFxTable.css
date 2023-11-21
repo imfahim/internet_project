@@ -28,3 +28,41 @@ th {
 .negativeChange {
    color: red;
 }
+.carousel{
+    width: 33%;
+    margin-top: 10px;
+}
+
+.carousel-indicators li{
+    margin-top: 10%;
+}
+.carousel-indicators .active{
+    margin-top: 10%;
+    /*background: black;*/
+}
+.card-text{
+    margin-bottom: 10% !important;
+}
+.carouselDiv{
+    display: inline-flex;
+    justify-content:space-between;
+}
+
+/* For Changing the color of the carousel control icons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: black; /* Change this to the desired color */
+}
+
+/*!* For changing the color on hover *!*/
+/*.carousel-control-prev:hover,*/
+/*.carousel-control-next:hover {*/
+/*    background-color: yellow; !* Change this to the desired hover color *!*/
+/*}*/
+
+/*!* For changing the background color of the carousel control arrows *!*/
+/*.carousel-control-prev,*/
+/*.carousel-control-next {*/
+/*    color: red; !* Change this to the desired arrow color *!*/
+/*    background: blue;*/
+/*}*/
