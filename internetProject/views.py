@@ -204,6 +204,11 @@ def currency_calculate(request, from_currency, to_currency):
 
 
 def currency(request, from_currency, to_currency):
+        data,latest_rate = get_currency_rate(request, from_currency, to_currency)
+        return  render(request, 'currency.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency})
+
+
+def get_currency_rate(request, from_currency, to_currency):
     api_key = settings.EXCHANGE_RATE_API_KEY
     url = 'https://min-api.cryptocompare.com/data/v2/histoday'
 
@@ -215,13 +220,11 @@ def currency(request, from_currency, to_currency):
     }
 
     response = requests.get(url, params=params)
-
     if response.status_code == 200:
         data = response.json()['Data']['Data']
         latest_rate = data[-1]
         data = json.dumps(data)
-        return render(request, 'currency.html',
-                      {'data': data, 'from_currency': from_currency, 'to_currency': to_currency, 'latest_rate': latest_rate})
+        return data, latest_rate
     else:
         return render(request, 'currency.html', {'error': "Error fetching data"})
 

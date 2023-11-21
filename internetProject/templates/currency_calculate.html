@@ -19,6 +19,7 @@
 <div>Current Rate: <span id="currentRate">Loading...</span></div>
 
 <input type="number" id="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}
+
 <div id="result"></div>
 <!-- chart container -->
 <div id="chartContainer" >
@@ -26,7 +27,9 @@
 </div>
 <!-- import javascript currencyTable.js -->
 <script src="{% static 'js/currencyTable.js' %}"></script>
-
+<a href="{% url 'internetProject:currency' from_currency to_currency %}">
+            <button type="button" >Back to Currency</button>
+</a>
 </body>
 </html>
 
