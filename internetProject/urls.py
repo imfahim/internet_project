@@ -15,5 +15,13 @@ urlpatterns = [
     path('currency/<str:from_currency>/<str:to_currency>/', views.currency, name='currency'),
     path('index_jk/', views.index_jk, name='index_jk'),
     path('payment/', views.payment, name='payment'),
+    path('about_us/', views.about_us, name='about_us'),
+    path('faq/', views.faq, name='faq'),
+    path('terms/', views.terms, name='terms'),
+    path('request_form/', views.request_form, name='request_form'),
+    path('complaint_form/', views.complaint_form, name='complaint_form'),
+    path('feedback_form/', views.feedback_form, name='feedback_form'),
+    path('send_email/', views.send_email, name='send_email'),
 ]
+
     

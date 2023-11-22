@@ -1,13 +1,20 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
+from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
+
+from internet_project.settings import REQUESTS_CA_BUNDLE
+from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
@@ -15,6 +22,8 @@ from datetime import datetime
 from math import copysign
 # import pytz
 import json
+import certifi
+import pytz
 import requests
 
 from internet_project import settings
@@ -250,6 +259,102 @@ def signin(request):
             messages.error(request, "Bad Credentials")
             return redirect('home')
     return render(request, "internetProject/signin.html")
+
+
+def about_us(request):
+    return render(request, "about-us.html")
+
+
+def faq(request):
+    return render(request, "faq.html")
+
+
+def terms(request):
+    return render(request, "terms.html")
+
+
+def request_form(request):
+    return render(request, "request_form.html")
+
+
+def complaint_form(request):
+    msg = ''
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        if form.is_valid():
+            form.save()
+            msg = 'You exceeded the number of levels for this course.'
+            return render(request, 'success.html', {'msg': msg})
+
+            # Create a success page
+    else:
+        form = ComplaintForm()
+
+    return render(request, 'complaint_form.html', {'form': form})
+
+
+def feedback_form(request):
+    msg = ''
+    if request.method == 'POST':
+        form = Feedback(request.POST)
+        if form.is_valid():
+            form.save()
+            msg = 'You exceeded the number of levels for this course.'
+            return render(request, 'success.html', {'msg': msg})
+
+            # Create a success page
+    else:
+        form = Feedback()
+
+    return render(request, 'feedback.html', {'form': form})
+
+
+
+
+
+
+# def send_email(request):
+#     subject = 'Testing mail'
+#     from_email = 'internetproject99@email.com'
+#     msg = '<p> Welcome to Our <b>Project </b></p>'
+#     to = 'shreyanshdalwadi@gmail.com'
+#     msg = EmailMultiAlternatives(subject, msg, from_email, [to])
+#     msg.content_subtype = 'html'
+#     msg.send()
+
+
+def send_email(request):
+    try:
+        if request.method == 'POST':
+            # Assuming your form has an input field named 'email'
+            email_address = request.POST.get('email')
+
+            subject = 'Testing mail'
+            from_email = 'internetproject99@email.com'
+
+            # Render the HTML content from the template
+            html_content = render_to_string('your_template.html')
+
+            # Create a text/plain version for clients that don't support HTML
+            text_content = strip_tags(html_content)
+
+            # Create the EmailMultiAlternatives object and attach both HTML and text versions
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [email_address])
+            msg.attach_alternative(html_content, "text/html")
+
+            # Send the email
+            msg.send()
+
+            # Return a success response if needed
+            return HttpResponse('Email sent successfully!')
+        else:
+            # Handle the case when the form is not submitted
+            return HttpResponse('Form not submitted.')
+    except Exception as e:
+        # Log the exception or handle it in an appropriate way
+        print(f"An error occurred while sending the email: {e}")
+        # Return an error response if needed
+        return HttpResponse('Failed to send email.')
 
 
 def signout(request):
