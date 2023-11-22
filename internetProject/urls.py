@@ -3,6 +3,9 @@ from internetProject import views
 from django.contrib import admin
 from django.urls import path, include
 
+from internetProject.views import CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, \
+    CustomPasswordResetCompleteView
+
 app_name = 'internetProject'
 
 urlpatterns = [
@@ -22,6 +25,11 @@ urlpatterns = [
     path('complaint_form/', views.complaint_form, name='complaint_form'),
     path('feedback_form/', views.feedback_form, name='feedback_form'),
     path('send_email/', views.send_email, name='send_email'),
+    path('password_reset/', CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    # path('reset/<uidb64>/<token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/<str:uidb64>/<slug:token>/', CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('password_reset_complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 
     

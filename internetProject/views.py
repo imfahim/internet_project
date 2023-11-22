@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.sites import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
@@ -25,9 +26,56 @@ import json
 import certifi
 import pytz
 import requests
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.urls import reverse_lazy, reverse
+# import pytz
+# import requests
 
 from internet_project import settings
 
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'internetProject/password_reset_form.html'
+    email_template_name = 'internetProject/password_reset_email.html'
+    subject_template_name = 'internetProject/password_reset_email_subject.txt'
+    success_url = '/password_reset/done/'
+    # def form_valid(self, form):
+    #     # your form processing logic here
+    #
+    #     # manually construct the success URL
+    #     success_url = self.request.build_absolute_uri(reverse('internetProject:password_reset'))
+    #
+    #     # perform any additional logic if needed
+    #
+    #     return super().form_valid(form)
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'internetProject/password_reset_done.html'
+
+# class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+#     template_name = 'internetProject/password_reset_confirm.html'
+#     success_url = reverse_lazy('password_reset_complete')
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'internetProject/password_reset_confirm.html'
+    success_url = '/password_reset_complete/'
+
+    def get(self, request, *args, **kwargs):
+        uidb64 = self.kwargs.get('uidb64')
+        token = self.kwargs.get('token')
+
+        if uidb64 is not None and token is not None:
+            context = {'uidb64': uidb64, 'token': token}
+            return self.render_to_response(context)
+        else:
+            return HttpResponse("Invalid reset link")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['uidb64'] = self.kwargs.get('uidb64', '')
+        context['token'] = self.kwargs.get('token', '')
+        return context
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'internetProject/password_reset_complete.html'
 
 def index(request):
     default_limit = 10
@@ -239,7 +287,7 @@ def signup(request):
         email.fail_silently = True
         email.send()
 
-        return redirect('signin')
+        return redirect('internetProject/signin')
 
     return render(request, "internetProject/signup.html")
 
