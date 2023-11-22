@@ -7,6 +7,7 @@ app_name = 'internetProject'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('coin-details/<str:coin_id>/', views.coin_details, name='coin_details'),
     path('signup', views.signup, name='signup'),
     path('signin', views.signin, name='signin'),
     path('signout', views.signout, name='signout'),

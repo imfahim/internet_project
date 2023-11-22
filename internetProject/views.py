@@ -12,26 +12,104 @@ from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
 from datetime import datetime
+from math import copysign
 # import pytz
+import json
 import requests
 
 from internet_project import settings
 
 
-# Create your views here.hghghg
+def index(request):
+    default_limit = 10
+    limit = default_limit
 
-def index2(request):
-    # Fetch data for Bitcoin (BTC)
-    btc_data = get_crypto_data("btc-bitcoin")
-    return print_crypto_info(btc_data)
+    page = request.GET.get('page', 1)
+    try:
+        page = int(page)
+    except (TypeError, ValueError):
+        page = 1
 
+    offset = (page - 1) * limit
+    api_data = get_crypto_data(limit, offset)
 
-def get_crypto_data(symbol):
-    url = f"https://api.coinpaprika.com/v1/tickers/{symbol}"
+    total_items = api_data['data']['stats']['total']
+    total_pages = (total_items + limit - 1) // limit
+    coins_data = api_data['data']['coins']
+
+    row_index = (page - 1) * limit + 1
+    for rowData in coins_data:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        rowData['index'] = row_index
+        row_index = row_index + 1
+        timestamp = int(rowData['listedAt'])
+        rowData['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+    top_ranked = get_top_ranked()
+    for rowData in top_ranked:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    top_changed = get_top_changed()
+    for rowData in top_changed:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    top_priced= get_top_priced()
+    for rowData in top_priced:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
+
+def coin_details(request, coin_id):
+    url = f"https://api.coinranking.com/v2/coin/{coin_id}"
+    response = requests.get(url)
+    api_data = response.json()
+    coin_data = api_data['data']['coin']
+    timestamp = int(coin_data['listedAt'])
+    coin_data['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = int(coin_data['priceAt'])
+    coin_data['priceAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = int(coin_data['allTimeHigh']['timestamp'])
+    coin_data['allTimeHigh']['timestamp'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data})
+
+def get_crypto_data(limit, offset):
+    url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
     response = requests.get(url)
     data = response.json()
+    print(data)
     return data
 
+def get_top_ranked():
+    url = f"https://api.coinranking.com/v2/coins?limit=3"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
+
+def get_top_changed():
+    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
+
+def get_top_priced():
+    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=price"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
 
 def print_crypto_info(data):
     response = HttpResponse()
@@ -49,7 +127,7 @@ def print_crypto_info(data):
 
 
 # Create your views here.
-def index(request):
+def index2(request):
     fxTableData = [
         {'id': 1, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000, 'sevenDayPer': 50000,
          'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},

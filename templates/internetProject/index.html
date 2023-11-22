@@ -1,21 +1,9 @@
-{#<!DOCTYPE html>#}
-{#{% load static %}#}
-{#<html lang="en">#}
-{#<head>#}
-{#    <meta charset="UTF-8">#}
-{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
-{#    <title>Forex Market Table</title>#}
-{#    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
-{#    <link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}">#}
-{#</head>#}
-{#<body>#}
-
 {% extends 'templates/base.html' %}
-{% block content %}
-{% load static %}
-   <section class="section">
 
-{% for message in messages %}
+{% load custom_filters %}
+{% load humanize %}
+{% block content %}
+    {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
         <strong>Message</strong> {{ message }}
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -23,95 +11,273 @@
         </button>
     </div>
     {% endfor %}
-    <h3>Welcome to our Internet Project</h3>
 
-    {% if user.is_authenticated %}
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
 
-    <h3>Hello {{ fname }}</h3>
-    <h4>You're Successfully Logged In</h4>
-    <button type="submit"><a href="/signout">SignOut</a></button>
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Ranked</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_ranked %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid %}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
 
-    {% else %}
-    <button type="submit"><a href="/signup">SignUp</a></button>
-    <button type="submit"><a href="/signin">SignIn</a></button>
-    {% endif %}
-    <div class="container">
-        <h2>Welcome to Fx Trade</h2>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>
-                        #
-                    </th>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Price
-                    </th>
-                       <th>
-                        1h %
-                       </th>
-                       <th>
-                        2h %
-                    </th>
-                       <th>
-                        7d %
-                    </th>
-                    <th>
-                        Market Cap
-                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="The total market value of a cryptocurrency's circulating supply. It is analogous to the free-float capitalization in the stock market.">
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                    </th>
-                    <th>
-                        Volume(24h)
-                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="A measure of how much of a cryptocurrency was traded in the last 24 hours.">
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                    </th>
-                    <th>
-                        Circulating Supply
-                        <span class="info-icon" data-toggle="tooltip" data-placement="top" title="The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.">
-                            <i class="fas fa-info-circle"></i>
-                        </span>
-                    </th>
+              </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
 
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Add your table data here -->
-          {% for rowData in fxTableData %}
-            <tr>
-               <td>{{ rowData.id }}</td>
-               <td>{{ rowData.Name }}</td>
-               <td>{{ rowData.Price }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.oneHrPer }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.twoHrPer }}</td>
-               <td class={{ rowData.changeStatus }}>{{ rowData.sevenDayPer }}</td>
-               <td>{{ rowData.Market_Cap }}</td>
-                <td>{{ rowData.Volume_24h }}</td>
-               <td>{{ rowData.Circulating_Supply }}</td>
-            </tr>
-          {% endfor %}
-            </tbody>
-        </table>
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Changed</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_changed %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid %}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+              </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
+
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Priced</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_priced %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid %}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+              </div>
+        </div>
+        </div>
     </div>
 
-    </section>
+    <br>
+        <div class="col-md-4">
+          <div class="markets-capital-item"  style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_ranked.0.iconUrl }}" alt="{{ top_ranked.0.symbol }}">
+              <span>{{ top_ranked.0.symbol }}</span>
+            </h2>
+            {% if  top_ranked.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
+                <h3 class="red">+{{ top_ranked.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
+                <h3 class="green">{{ top_ranked.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="markets-capital-item" style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_changed.0.iconUrl }}" alt="{{ top_changed.0.symbol }}">
+              <span>{{ top_changed.0.symbol }}</span>
+            </h2>
+              {% if  top_changed.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
+                <h3 class="red">+{{ top_changed.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
+                <h3 class="green">{{ top_changed.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="markets-capital-item" style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_priced.0.iconUrl }}" alt="{{ top_priced.0.symbol }}">
+              <span>{{ top_priced.0.symbol }}</span>
+            </h2>
+          {% if  top_priced.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
+                <h3 class="red">+{{ top_priced.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
+                <h3 class="green">{{ top_priced.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
 
-  <!--#Adding External Libraries -->
-    <script src="https://kit.fontawesome.com/d7f9ddb8cd.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-    <script>
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
+          </div>
+        </div>
+
+    <div class="col-md-12">
+          <div class="markets-pair-list">
+            <ul class="nav nav-pills" id="pills-tab" role="tablist">
+=
+              <li class="nav-item nav-link active" aria-selected="true">
+                <form class="settings-profile" method="get">
+                <label for="page">Page:</label>
+                <div class="form-row">
+                    <div class="col-md-6">
+                        <select class="custom-select" name="page" id="page">
+                            {% for page_number in total_pages|range %}
+                                <option value="{{ page_number }}" {% if page_number == page %}selected{% endif %}>
+                                    {{ page_number }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input style="margin-top: 0px" type="submit" value="Go">
+                    </div>
+                </div>
+                </form>
+                </a>
+              </li>=
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active" id="BTC" role="tabpanel">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                        <th></th>
+                        <th>Name</th>
+                        <th>price</th>
+                        <th>marketCap</th>
+                        <th>listedAt</th>
+                        <th>tier</th>
+                        <th>change</th>
+                        <th>rank</th>
+                        <th>24hVolume</th>
+                        <th>btcPrice</th>
+                        <th>1H</th>
+                        <th>2H</th>
+                        <th>3H</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                {% for rowData in cryptocurrencies %}
+                    <tr data-href="{% url 'internetProject:coin_details' rowData.uuid %}">
+                        <td>{{ rowData.index }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td>{{ rowData.name }}</td>
+                       <td>{{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td>{{ rowData.marketCap|floatformat:3|intcomma }}</td>
+                       <td>{{ rowData.listedAt }}</td>
+                       <td>{{ rowData.tier }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                       <td>{{ rowData.rank }}</td>
+                       <td>{{ rowData.24hVolume|intcomma }}</td>
+                       <td>{{ rowData.btcPrice|floatformat:3 }}</td>
+                        {% for value in rowData.sparkline|slice:":3" %}
+                            <td class={{ rowData.changeStatus }}>{{ value|floatformat:3|intcomma  }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+    </div>
+
 {% endblock%}
 
-{#</body>#}
-{#</html>#}
