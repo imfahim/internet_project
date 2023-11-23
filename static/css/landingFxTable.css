@@ -1,0 +1,48 @@
+/* Add your custom styles for the table here */
+table {
+    width: 100%;
+    margin-top: 115%;
+}
+
+th, td {
+    text-align: center;
+}
+
+th {
+    background-color: #f8f9fa;
+}
+
+.info-icon {
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.fas{
+    margin-right: 5px;
+}
+
+.positiveChange {
+   color: green;
+}
+
+.negativeChange {
+   color: red;
+}
+.carousel{
+    width: 33%;
+}
+
+.carousel-indicators .li{
+    margin-top: 10%;
+}
+.carousel-indicators .active{
+    margin-top: 10%;
+    background: black;
+}
+.card-text{
+    margin-bottom: 10% !important;
+}
+.carouselDiv{
+    display: inline-flex;
+    justify-content:space-between;
+}
