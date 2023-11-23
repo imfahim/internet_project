@@ -204,9 +204,10 @@ def currency_calculate(request, from_currency, to_currency):
 
 
 def currency(request, from_currency, to_currency):
+    currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     return render(request, 'currency.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
-                                             'to_currency': to_currency})
+                                             'to_currency': to_currency, 'currencys': currencys})
 
 
 def get_currency_rate(request, from_currency, to_currency):
@@ -250,4 +251,5 @@ def payment_test(request, from_currency, to_currency):
         total_price = Decimal(amount) * Decimal(latest_rate['close'])
 
         return render(request, "payment_value_get_test.html",
-                      {'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency, 'amount': amount})
+                      {'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency,
+                       'amount': amount})
