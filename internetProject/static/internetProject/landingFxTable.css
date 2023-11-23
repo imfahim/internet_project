@@ -66,3 +66,8 @@ th {
 /*    color: red; !* Change this to the desired arrow color *!*/
 /*    background: blue;*/
 /*}*/
+
+/* Hide the carousel */
+.hidden {
+    display: none;
+}

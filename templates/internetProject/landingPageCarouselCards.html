@@ -1,6 +1,11 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'internetProject/landingFxTable.css' %}" />
 
+<div class="form-check form-switch" id="carouselToggleBtn">
+    <label class="form-check-label" for="flexSwitchCheckChecked">Highlights</label>
+  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+</div>
+{#<button id="carouselToggleBtn">Toggle Carousels</button>#}
 <div class="carouselDiv">
      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
          <ol class="carousel-indicators">
@@ -155,3 +160,21 @@
          </a>
       </div>
     </div>
+
+<!-- Add this script in your HTML, preferably at the end, after including other scripts -->
+<script>
+    // Wait for the document to be ready
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the button and carousels
+        var toggleBtn = document.getElementById('carouselToggleBtn');
+        var carousels = document.querySelectorAll('.carouselDiv');
+
+        // Add a click event listener to the button
+        toggleBtn.addEventListener('click', function () {
+            // Toggle the 'hidden' class on each carousel
+            carousels.forEach(function (carousel) {
+                carousel.classList.toggle('hidden');
+            });
+        });
+    });
+</script>
