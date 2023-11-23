@@ -18,17 +18,26 @@
 <!-- display real time rate -->
 <div>Current Rate: <span id="currentRate">Loading...</span></div>
 
-<input type="number" id="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}
+<form method="post" action="/payment_test/{{ from_currency }}/{{ to_currency }}/">
+    {% csrf_token %}
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}
+    <div id="result"></div>
+    <button type="submit">Pay</button>
+{#<input type="number" id="amount" name="amount" placeholder="Enter amount" oninput="calculate()"> {{ from_currency }}#}
 
 <div id="result"></div>
 <!-- chart container -->
-<div id="chartContainer" >
+<div id="chartContainer">
     <canvas id="rateChart"></canvas>
 </div>
 <!-- import javascript currencyTable.js -->
 <script src="{% static 'js/currencyTable.js' %}"></script>
+{#<a href="{% url 'internetProject:payment_test' from_currency to_currency %}">#}
+{#    <button type="button">Pay</button>#}
+{#</a>#}
 <a href="{% url 'internetProject:currency' from_currency to_currency %}">
-            <button type="button" >Back to Currency</button>
+    <button type="button">Back to Currency</button>
 </a>
 </body>
 </html>

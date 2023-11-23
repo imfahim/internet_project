@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -204,8 +204,9 @@ def currency_calculate(request, from_currency, to_currency):
 
 
 def currency(request, from_currency, to_currency):
-        data,latest_rate = get_currency_rate(request, from_currency, to_currency)
-        return  render(request, 'currency.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency})
+    data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+    return render(request, 'currency.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+                                             'to_currency': to_currency})
 
 
 def get_currency_rate(request, from_currency, to_currency):
@@ -235,3 +236,18 @@ def index_jk(request):
 
 def payment(request):
     return render(request, "templates/payment.html")
+
+
+def payment_test(request, from_currency, to_currency):
+    if request.method == 'POST':
+        # get the amount from the form
+        amount = request.POST.get('amount')
+        # get the currency rate from the API
+        data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+
+        # get the total price by multiplying the amount by the latest rate
+        # (close is the closing price of the currency for the day)
+        total_price = Decimal(amount) * Decimal(latest_rate['close'])
+
+        return render(request, "payment_value_get_test.html",
+                      {'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency, 'amount': amount})

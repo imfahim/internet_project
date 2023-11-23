@@ -15,5 +15,6 @@ urlpatterns = [
     path('currency_calculate/<str:from_currency>/<str:to_currency>/', views.currency_calculate, name='currency_calculate'),
     path('index_jk/', views.index_jk, name='index_jk'),
     path('payment/', views.payment, name='payment'),
+    path('payment_test/<str:from_currency>/<str:to_currency>/', views.payment_test, name='payment_test'),
 ]
     
