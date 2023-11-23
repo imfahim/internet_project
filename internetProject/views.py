@@ -1,37 +1,172 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.sites import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
+from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.conf import settings
+
+from internet_project.settings import REQUESTS_CA_BUNDLE
+from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
 from datetime import datetime
+from math import copysign
 # import pytz
+import json
+import certifi
+import pytz
 import requests
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.urls import reverse_lazy, reverse
+# import pytz
+# import requests
 
 from internet_project import settings
 
+class CustomPasswordResetView(PasswordResetView):
+    template_name = 'internetProject/password_reset_form.html'
+    email_template_name = 'internetProject/password_reset_email.html'
+    subject_template_name = 'internetProject/password_reset_email_subject.txt'
+    success_url = '/password_reset/done/'
+    # def form_valid(self, form):
+    #     # your form processing logic here
+    #
+    #     # manually construct the success URL
+    #     success_url = self.request.build_absolute_uri(reverse('internetProject:password_reset'))
+    #
+    #     # perform any additional logic if needed
+    #
+    #     return super().form_valid(form)
 
-# Create your views here.hghghg
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'internetProject/password_reset_done.html'
 
-def index2(request):
-    # Fetch data for Bitcoin (BTC)
-    btc_data = get_crypto_data("btc-bitcoin")
-    return print_crypto_info(btc_data)
+# class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+#     template_name = 'internetProject/password_reset_confirm.html'
+#     success_url = reverse_lazy('password_reset_complete')
 
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'internetProject/password_reset_confirm.html'
+    success_url = '/password_reset_complete/'
 
-def get_crypto_data(symbol):
-    url = f"https://api.coinpaprika.com/v1/tickers/{symbol}"
+    def get(self, request, *args, **kwargs):
+        uidb64 = self.kwargs.get('uidb64')
+        token = self.kwargs.get('token')
+
+        if uidb64 is not None and token is not None:
+            context = {'uidb64': uidb64, 'token': token}
+            return self.render_to_response(context)
+        else:
+            return HttpResponse("Invalid reset link")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['uidb64'] = self.kwargs.get('uidb64', '')
+        context['token'] = self.kwargs.get('token', '')
+        return context
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'internetProject/password_reset_complete.html'
+
+def index(request):
+    default_limit = 10
+    limit = default_limit
+
+    page = request.GET.get('page', 1)
+    try:
+        page = int(page)
+    except (TypeError, ValueError):
+        page = 1
+
+    offset = (page - 1) * limit
+    api_data = get_crypto_data(limit, offset)
+
+    total_items = api_data['data']['stats']['total']
+    total_pages = (total_items + limit - 1) // limit
+    coins_data = api_data['data']['coins']
+
+    row_index = (page - 1) * limit + 1
+    for rowData in coins_data:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        rowData['index'] = row_index
+        row_index = row_index + 1
+        timestamp = int(rowData['listedAt'])
+        rowData['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+
+    top_ranked = get_top_ranked()
+    for rowData in top_ranked:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    top_changed = get_top_changed()
+    for rowData in top_changed:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    top_priced= get_top_priced()
+    for rowData in top_priced:
+        check_decimal = Decimal(str(rowData['change']))
+        sign = copysign(1, check_decimal)
+        rowData['changeStatus'] = 'green' if sign > 0 else 'red'
+        float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
+        rowData['sparkline'] = json.dumps(float_array)
+
+    return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
+
+def coin_details(request, coin_id):
+    url = f"https://api.coinranking.com/v2/coin/{coin_id}"
+    response = requests.get(url)
+    api_data = response.json()
+    coin_data = api_data['data']['coin']
+    timestamp = int(coin_data['listedAt'])
+    coin_data['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = int(coin_data['priceAt'])
+    coin_data['priceAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    timestamp = int(coin_data['allTimeHigh']['timestamp'])
+    coin_data['allTimeHigh']['timestamp'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data})
+
+def get_crypto_data(limit, offset):
+    url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
     response = requests.get(url)
     data = response.json()
+    print(data)
     return data
 
+def get_top_ranked():
+    url = f"https://api.coinranking.com/v2/coins?limit=3"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
+
+def get_top_changed():
+    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
+
+def get_top_priced():
+    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=price"
+    response = requests.get(url)
+    data = response.json()
+    return data['data']['coins']
 
 def print_crypto_info(data):
     response = HttpResponse()
@@ -49,33 +184,31 @@ def print_crypto_info(data):
 
 
 # Create your views here.
-def index(request):
+def index2(request):
     fxTableData = [
-        {'id': 1, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000, 'sevenDayPer': 50000,
-         'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 2, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000, 'sevenDayPer': 50000,
-         'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 3, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 1, 'Name': 'Bitcoin','logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': -50000,'twoHrPer': -50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
+        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': 50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
+        {'id': 3, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 4, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': -50000,
+         'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
+        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 5, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 6, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
-         'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 7, 'Name': 'Bitcoin', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
-         'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
+        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer':50000,
+         'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
 
     ]
     for rowData in fxTableData:
         # Add a 'change_color' attribute to each entry based on the value of 'change_24h'
-        rowData['changeStatus'] = 'positiveChange' if rowData['oneHrPer'] > 0 else 'negativeChange'
-        rowData['changeStatus'] = 'positiveChange' if rowData['twoHrPer'] > 0 else 'negativeChange'
-        rowData['changeStatus'] = 'positiveChange' if rowData['sevenDayPer'] > 0 else 'negativeChange'
+        rowData['change1Status'] = 'positiveChange' if rowData['oneHrPer'] > 0 else 'negativeChange'
+        rowData['change2Status'] = 'positiveChange' if rowData['twoHrPer'] > 0 else 'negativeChange'
+        rowData['change7Status'] = 'positiveChange' if rowData['sevenDayPer'] > 0 else 'negativeChange'
 
-    return render(request, 'internetProject/index.html', {'fxTableData': fxTableData})
+    return render(request, 'internetProject/index.html',{'fxTableData':fxTableData})
 
 
 def home(request):
@@ -152,7 +285,7 @@ def signup(request):
         email.fail_silently = True
         email.send()
 
-        return redirect('signin')
+        return redirect('internetProject/signin')
 
     return render(request, "internetProject/signup.html")
 
@@ -172,6 +305,102 @@ def signin(request):
             messages.error(request, "Bad Credentials")
             return redirect('home')
     return render(request, "internetProject/signin.html")
+
+
+def about_us(request):
+    return render(request, "about-us.html")
+
+
+def faq(request):
+    return render(request, "faq.html")
+
+
+def terms(request):
+    return render(request, "terms.html")
+
+
+def request_form(request):
+    return render(request, "request_form.html")
+
+
+def complaint_form(request):
+    msg = ''
+    if request.method == 'POST':
+        form = ComplaintForm(request.POST)
+        if form.is_valid():
+            form.save()
+            msg = 'You exceeded the number of levels for this course.'
+            return render(request, 'success.html', {'msg': msg})
+
+            # Create a success page
+    else:
+        form = ComplaintForm()
+
+    return render(request, 'complaint_form.html', {'form': form})
+
+
+def feedback_form(request):
+    msg = ''
+    if request.method == 'POST':
+        form = Feedback(request.POST)
+        if form.is_valid():
+            form.save()
+            msg = 'You exceeded the number of levels for this course.'
+            return render(request, 'success.html', {'msg': msg})
+
+            # Create a success page
+    else:
+        form = Feedback()
+
+    return render(request, 'feedback.html', {'form': form})
+
+
+
+
+
+
+# def send_email(request):
+#     subject = 'Testing mail'
+#     from_email = 'internetproject99@email.com'
+#     msg = '<p> Welcome to Our <b>Project </b></p>'
+#     to = 'shreyanshdalwadi@gmail.com'
+#     msg = EmailMultiAlternatives(subject, msg, from_email, [to])
+#     msg.content_subtype = 'html'
+#     msg.send()
+
+
+def send_email(request):
+    try:
+        if request.method == 'POST':
+            # Assuming your form has an input field named 'email'
+            email_address = request.POST.get('email')
+
+            subject = 'Testing mail'
+            from_email = 'internetproject99@email.com'
+
+            # Render the HTML content from the template
+            html_content = render_to_string('your_template.html')
+
+            # Create a text/plain version for clients that don't support HTML
+            text_content = strip_tags(html_content)
+
+            # Create the EmailMultiAlternatives object and attach both HTML and text versions
+            msg = EmailMultiAlternatives(subject, text_content, from_email, [email_address])
+            msg.attach_alternative(html_content, "text/html")
+
+            # Send the email
+            msg.send()
+
+            # Return a success response if needed
+            return HttpResponse('Email sent successfully!')
+        else:
+            # Handle the case when the form is not submitted
+            return HttpResponse('Form not submitted.')
+    except Exception as e:
+        # Log the exception or handle it in an appropriate way
+        print(f"An error occurred while sending the email: {e}")
+        # Return an error response if needed
+        return HttpResponse('Failed to send email.')
 
 
 def signout(request):
