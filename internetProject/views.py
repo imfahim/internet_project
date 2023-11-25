@@ -28,10 +28,12 @@ import pytz
 import requests
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy, reverse
-# import pytz
+import pytz
 # import requests
 
 from internet_project import settings
+
+home = '/'
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
@@ -285,7 +287,8 @@ def signup(request):
         email.fail_silently = True
         email.send()
 
-        return redirect('internetProject/signin')
+        # return redirect('internetProject/signin')
+        return redirect('internetProject:signin')
 
     return render(request, "internetProject/signup.html")
 
