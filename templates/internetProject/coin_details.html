@@ -9,10 +9,16 @@
             <div class="card-header row">
                 <div class="col-md-4">
                     <img style="max-height: 60px;" src="{{ coin_data.iconUrl }}" alt="{{ coin_data.name }} icon">
+                    <br>
+                     <div class="col-md-8 my-auto" style="margin-left: -12px;">
+                    <h3><span class="badge badge-light">{{ coin_data.symbol }}</span></h3>
                 </div>
+                </div>
+
                 <div class="col-md-8 my-auto">
-                    <h3>{{ coin_data.name }} <span class="badge badge-light">{{ coin_data.symbol }}</span></h3>
+                    <h3>{{ latest_rate.close }} <span class="badge badge-light">{{ to_currency }}</span></h3>
                 </div>
+
             </div>
             <div class="card-body">
                 <p>{{ coin_data.description }}</p>
@@ -26,10 +32,7 @@
                         <th>rank</th>
                         <td>{{ coin_data.rank }}</td>
                     </tr>
-                    <tr>
-                        <th>price</th>
-                        <td>$ {{ coin_data.price|floatformat:3 }}</td>
-                    </tr>
+
                     <tr>
                         <th>btcPrice</th>
                         <td>{{ coin_data.btcPrice|floatformat:3 }}</td>
@@ -63,11 +66,7 @@
                         <th>change</th>
                         <td>{{ coin_data.change }}</td>
                     </tr>
-                    <tr>
-                        <th>allTimeHigh</th>
-                        <td>$ {{ coin_data.allTimeHigh.price|floatformat:3 }}
-                            at {{ coin_data.allTimeHigh.timestamp }}</td>
-                    </tr>
+
                     <tr>
                         <th>listedAt</th>
                         <td>{{ coin_data.allTimeHigh.timestamp }}</td>

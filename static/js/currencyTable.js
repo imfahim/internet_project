@@ -74,19 +74,15 @@ ws.onmessage = function (event) {
         document.getElementById('currentRate').innerText = currentRate;
         document.getElementById('currentRate').style.color = 'white';
         calculate();
-        // 获取当前时间
         const now = new Date();
-        // 格式化时间为 'YYYY-MM-DD HH:mm' 的格式
         const year = now.getFullYear();
-        const month = ('0' + (now.getMonth() + 1)).slice(-2); // 月份从0开始，所以加1
+        const month = ('0' + (now.getMonth() + 1)).slice(-2);
         const day = ('0' + now.getDate()).slice(-2);
         const hours = ('0' + now.getHours()).slice(-2);
         const minutes = ('0' + now.getMinutes()).slice(-2);
         const seconds = ('0' + now.getSeconds()).slice(-2);
-        const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} |`;
-        // 更新实时汇率显示
+        const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         document.getElementById('currentRate').innerText = response.PRICE;
-        // 更新图表
         updateChart(response.PRICE, formattedTime);
     }
 };

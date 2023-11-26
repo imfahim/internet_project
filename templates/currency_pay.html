@@ -8,27 +8,47 @@
             color: white;
         }
     </style>
-    <div class="flex-container">
-        <div id="content">
-            <div>Current Rate: <span id="currentRate">Loading...</span></div>
 
 
-            <form method="post" action="/payment_test/{{ from_currency }}/{{ to_currency }}/">
-                {% csrf_token %}
-                <label for="amount">Amount:</label>
-                <input type="number" id="amount" name="amount" placeholder="Enter amount"
-                       oninput="calculate()"> {{ from_currency }}
-                <div id="result"></div>
-                <button type="submit">Pay</button>
-            </form>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+            <div class="flex-container">
+                <div id="content">
 
-            <a href="{% url 'internetProject:coin_details' coin_id from_currency to_currency %}">
-                <button type="button">Back to Coin details</button>
-            </a>
+                            <a href="{% url 'internetProject:coin_details' coin_id from_currency to_currency %}">
+                                <button type="button"><-</button>
+                            </a>
+                    <div class="card-body">
+                        <table class="table table-dark table-striped">
+                            <tbody>
+                            <tr>
+
+                                <th>Current Rate:</th>
+                                <td><span id="currentRate">Loading...</span></td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                        <br>
+                        <form method="post" action="/payment_test/{{ from_currency }}/{{ to_currency }}/">
+                                {% csrf_token %}
+                                <label for="amount">Amount:</label>
+                                <input type="number" id="amount" name="amount" placeholder="Enter amount"
+                                       oninput="calculate()"> {{ from_currency }}
+                                <div id="result"></div>
+                                <button type="submit">Pay</button>
+
+                            </form>
+
+
+                    </div>
+
+
+                </div>
+            </div>
         </div>
     </div>
-
-
 
 
 

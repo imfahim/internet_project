@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
@@ -15,6 +16,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.views.generic import TemplateView
 from internet_project.settings import REQUESTS_CA_BUNDLE
+from .models import Complaint, Feedback, Currency_rate
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
 from .models import Currency_rate
@@ -429,6 +431,8 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'activation_failed.html')
 
+
+@login_required
 def currency_pay(request, coin_id, from_currency, to_currency):
     return render(request, 'currency_pay.html', {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
 
@@ -456,6 +460,14 @@ def get_currency_rate(request, from_currency, to_currency):
     if response.status_code == 200:
         data = response.json()['Data']['Data']
         latest_rate = data[-1]
+        for rate in data:
+            timestamp = datetime.fromtimestamp(rate['time'])
+            Currency_rate.objects.create(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                rate=rate['close'],
+                time=timestamp,
+            )
         data = json.dumps(data)
         return data, latest_rate
     else:
