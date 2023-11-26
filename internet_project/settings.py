@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from . info import *
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -131,3 +132,4 @@ EXCHANGE_RATE_API_KEY = 'fdaacc91c4f89786b14f193e53821e1bee6f29209215ef67d6c6bf0
 STATICFILES_DIRS = [
     BASE_DIR, "static",
 ]
+

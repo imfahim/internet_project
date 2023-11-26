@@ -12,13 +12,15 @@ from .tokens import generate_token
 from .models import Currency_rate
 from _decimal import Decimal
 from datetime import datetime
+
 # import pytz
 import requests
 
 from internet_project import settings
 
 
-# Create your views here.hghghg
+# Create your views here.
+
 
 def index2(request):
     # Fetch data for Bitcoin (BTC)
@@ -238,3 +240,7 @@ def index_jk(request):
 
 def payment(request):
     return render(request, "templates/payment.html")
+
+
+
+
