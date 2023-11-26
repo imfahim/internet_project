@@ -37,29 +37,19 @@ class Feedback(models.Model):
 
 
 # For the payment
-# class Payment(models.Model):
-#     first_name = models.CharField(max_length=50)
-#     last_name = models.CharField(max_length=50)
-#     card_number = models.CharField(max_length=16)
-#     card_expiry_month = models.CharField(max_length=2)
-#     card_expiry_year = models.CharField(max_length=4)
-#     card_cvc = models.CharField(max_length=3)
-#     # Add other payment-related fields as needed
-#
-#     def __str__(self):
-#         return f'{self.first_name} {self.last_name} - {self.card_number} - {self.card_expiry_month}/{self.card_expiry_year}'
-
-
-
-
-
 class Payment(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    card_number = models.CharField(max_length=16)
-    id_number = models.CharField(max_length=20)
-    transaction_id = models.CharField(max_length=255)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    given_name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    create_time = models.DateTimeField()
+    email_address = models.EmailField()
+    payer_id = models.CharField(max_length=255)
+    reference_id = models.CharField(max_length=255)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    currency_code = models.CharField(max_length=3)
 
     def __str__(self):
-        return f"{self.user.username} - {self.transaction_id}"
+        return f"{self.status} - {self.create_time} - {self.given_name} {self.surname} - {self.email_address} - {self.payer_id} - {self.reference_id} - {self.value} {self.currency_code}"
+
+
