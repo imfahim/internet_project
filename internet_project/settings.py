@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+
+# from django.template.context_processors import media
+
 from .info import *
 import certifi
 
@@ -136,3 +139,6 @@ EXCHANGE_RATE_API_KEY = 'fdaacc91c4f89786b14f193e53821e1bee6f29209215ef67d6c6bf0
 STATICFILES_DIRS = [
     BASE_DIR, "static",
 ]
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

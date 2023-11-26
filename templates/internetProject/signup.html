@@ -17,7 +17,7 @@
     </div>
     {% endfor %}
 <h3>Signup</h3>
-<form action="/signup" method="post">
+<form action="/signup" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="">Username</label>
     <input type="text" id="username" name="username" placeholder="Create a username (only letters and numbers" Required>
@@ -36,6 +36,10 @@
     <br>
     <label for="">Confirm your Password</label>
     <input type="password" id="pass2" name="pass2" placeholder="Confirm your Password" Required>
+    <br>
+    <label for="id_proof">Upload ID Proof</label>
+    <input type="file" id="id_proof" name="id_proof" accept="image/*,application/pdf" required>
+    <small>Accepted formats: Image files (jpeg, png) or PDF</small>
     <br>
 
     <button type="submit">Sign Up</button>

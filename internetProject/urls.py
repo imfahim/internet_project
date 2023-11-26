@@ -32,4 +32,4 @@ urlpatterns = [
     path('password_reset_complete/', CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
 ]
 
-    
+
