@@ -576,7 +576,7 @@ def payment(request):
     return render(request, "templates/payment.html",{'output':output,'JsonResponse':JsonResponse})
 
 
-
+@login_required
 def payment_history(request):
     payments = Payment.objects.filter(user=request.user) #get the login user payment history
     return render(request, "templates/payment-history.html",{'payments':payments})
