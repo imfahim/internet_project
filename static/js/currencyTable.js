@@ -1,96 +1,129 @@
-// 定义全局变量来存储图表实例和图表数据
 let rateChart;
 let chartData = {
-    labels: [], // X轴的标签数组
+    labels: [],
     datasets: [{
-        label: 'BTC to USD',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        borderColor: 'rgb(255, 99, 132)',
-        data: [] // Y轴的数据数组
+        label: `${fromCurrency} to ${toCurrency}`,
+        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        borderColor: 'rgb(54, 162, 235)',
+        data: []
     }]
 };
-
-// 当DOM完全加载后初始化图表
+let currentRate = 0;
 document.addEventListener('DOMContentLoaded', function () {
     const ctx = document.getElementById('rateChart').getContext('2d');
     rateChart = new Chart(ctx, {
         type: 'line',
         data: chartData,
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
-                xAxes: [{
-                    type: 'time',
-                    distribution: 'linear'
-                }],
-                yAxes: [{
-                    beginAtZero: false
-                }]
+                x: {
+                    ticks: {
+                        autoSkip: true,
+                        maxRotation: 0,
+                        minRotation: 0,
+                        color: 'white'
+                    },
+
+                },
+                y: {
+                    beginAtZero: false,
+                    ticks: {
+                        color: 'white'
+
+                    }
+                },
+
+            },
+            plugins: {
+            legend: {
+                labels: {
+                    color: 'white'
+                }
+            },
+            tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+                position: 'nearest',
             }
+        },
+
         }
     });
 });
 
-// 更新图表的函数
 function updateChart(price, time) {
-    // 添加新的数据点到图表
     chartData.labels.push(time);
     chartData.datasets[0].data.push(price);
-
-    // 更新图表
     rateChart.update();
 
-    // 如果图表数据点过多，删除最旧的数据点
     if (chartData.labels.length > 60) {
         chartData.labels.shift();
         chartData.datasets[0].data.shift();
     }
 }
-const apiKey = 'fdaacc91c4f89786b14f193e53821e1bee6f29209215ef67d6c6bf07ccfc0ddd';  // 替换为你的API密钥
-// WebSocket连接和消息处理
+
+const apiKey = '8f5501d6db23484127f4bb1ef51605785bd4fd9248dd0827715933a72ff5a729';
 let ws = new WebSocket(`wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`);
-ws.onmessage = function(event) {
+ws.onmessage = function (event) {
     const response = JSON.parse(event.data);
-    // 确保是我们订阅的汇率更新消息
     if (response.TYPE === "5" && response.PRICE) {
+        currentRate = response.PRICE;
+        document.getElementById('currentRate').innerText = currentRate;
+        document.getElementById('currentRate').style.color = 'white';
+        calculate();
         // 获取当前时间
-        const time = new Date();
+        const now = new Date();
+        // 格式化时间为 'YYYY-MM-DD HH:mm' 的格式
+        const year = now.getFullYear();
+        const month = ('0' + (now.getMonth() + 1)).slice(-2); // 月份从0开始，所以加1
+        const day = ('0' + now.getDate()).slice(-2);
+        const hours = ('0' + now.getHours()).slice(-2);
+        const minutes = ('0' + now.getMinutes()).slice(-2);
+        const seconds = ('0' + now.getSeconds()).slice(-2);
+        const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds} |`;
         // 更新实时汇率显示
         document.getElementById('currentRate').innerText = response.PRICE;
         // 更新图表
-        updateChart(response.PRICE, time);
+        updateChart(response.PRICE, formattedTime);
     }
 };
 
 
-ws.onopen = function() {
-    // 订阅BTC到USD的汇率数据
+ws.onopen = function () {
     const msg = JSON.stringify({
         "action": "SubAdd",
-        "subs": ["5~CCCAGG~BTC~USD"]
+        "subs": [`5~CCCAGG~${fromCurrency}~${toCurrency}`]
     });
     ws.send(msg);
 };
 
 
-ws.onerror = function(error) {
-    // 处理错误
+ws.onerror = function (error) {
     console.error('WebSocket Error:', error);
 };
+ws.onclose = function (event) {
 
-ws.onclose = function(event) {
-    // 在连接关闭时处理事件，考虑重新连接
     console.log('WebSocket connection closed: ', event);
-    // 等待5秒后重新连接
-    setTimeout(function() {
+
+    setTimeout(function () {
         ws = new WebSocket(`wss://streamer.cryptocompare.com/v2?api_key=${apiKey}`);
     }, 5000);
 };
 
-// 根据需要更新图表的代码，这可能需要根据您的图表库来实现
-// 如果需要定时刷新整个图表，可以在这里实现
-setInterval(() => {
-    // 在这里实现获取过去五分钟的汇率数据的逻辑
-    // 然后调用 updateChart() 函数更新图表
-    // 由于这个例子是实时更新，所以这部分可以省略
-}, 3000); // 每五分钟执行一次
+function calculate() {
 
+    const amountElement = document.getElementById('amount');
+    const amount = amountElement.value;
+
+    if (amount !== '' && currentRate) {
+        const result = (amount * currentRate);
+
+        document.getElementById('result').innerText = `${result} ${toCurrency}`;
+    } else {
+
+        document.getElementById('result').innerText = `NaN ${toCurrency}`;
+    }
+}

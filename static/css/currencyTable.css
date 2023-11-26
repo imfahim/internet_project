@@ -1,0 +1,86 @@
+#chartContainer {
+    width: 1000px;
+    height: 600px;
+    float: right;
+    margin-right: 80px;
+}
+ .flex-container {
+     display: flex;
+     justify-content: space-between;
+ }
+ .rate-info {
+     flex: 1; /* 调整这个值来改变左侧区域的宽度 */
+     margin-right: 20px; /* 右侧的间隔 */
+ }
+ .chart-container {
+     flex: 2; /* 调整这个值来改变图表区域的宽度 */
+ }
+ /* 调整canvas的大小 */
+ #rateCharMonth {
+     width: 100%;
+     height: auto;
+ }
+
+ body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+
+#currentRate, #result {
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: #fff;
+}
+
+form {
+  background: #333;
+  padding: 15px;
+  border-radius: 5px;
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+form label, form input, form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+form input, form button {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+form button {
+  background-color: #5cb85c;
+  color: #fff;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #4cae4c;
+}
+
+#chartContainer {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+button[type="button"] {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: #0275d8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="button"]:hover {
+  background-color: #025aa5;
+}
