@@ -13,7 +13,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.conf import settings
-
+from django.views.generic import TemplateView
 from internet_project.settings import REQUESTS_CA_BUNDLE
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
@@ -469,3 +469,10 @@ def index_jk(request):
 
 def payment(request):
     return render(request, "templates/payment.html")
+
+
+
+#view for PayPal Payment Gateway Page
+class PaymentView(TemplateView):
+    template_name = 'paymentPaypal.html'
+
