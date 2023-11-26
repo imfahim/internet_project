@@ -1,0 +1,76 @@
+{% extends 'templates/base.html' %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+{% load static %}
+
+     <link rel="stylesheet" href="{% static 'assets/css/w3.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/paymentPaypal.css' %}" />
+
+
+<body>
+    <div class="center">
+        <div class="payment-container">
+
+            <header class="w3-container w3-blue">
+                    <h1>PayPal Payment</h1>
+            </header>
+
+            <p>Please choose a method for your payment.</p>
+
+            <!-- PAYPAL BUTTONS HERE  -->
+            <div id="paypal-button-container"></div>
+
+            <!-- Include the PayPal JavaScript SDK -->
+            <script src="https://www.paypal.com/sdk/js?client-id=AfwyzgvbNnQHpWTkfDLiH8nh92ma2rbylSPtJ4WfIEWqJMUZNT1KUEadfpUGW0MHmR0j_Bde-u3EIohP&currency=USD">
+            </script>
+
+            <script>
+                // Render the PayPal button into #paypal-button-container
+                paypal.Buttons({
+                    // Set up the transaction
+                    createOrder: function (data, actions) {
+                        return actions.order.create({
+                            purchase_units: [{
+                                amount: {
+                                    value: '0.01'
+                                }
+                            }]
+                        });
+                    },
+
+                    // Finalize the transaction
+                    onApprove: function (data, actions) {
+                        return actions.order.capture().then(function (details) {
+
+                            console.log("raja" + details.status + details.create_time + details.update_time + details.payer.name)
+
+                            //Checking the payment status
+                             if (details.status === 'COMPLETED') {
+                                 // Show a success message to the buyer
+                                 alert('Transaction completed by Raja' + '--- Transaction ID-' + details.id);
+                                 //Save the necessary details to the model for Successful Transaction
+                                    console.log('Payment was successful!');
+                                    console.log('Transaction ID: ' + details.id);
+                                    console.log('Payer Name: ' + details.payer.name.given_name);
+                                    console.log('Payer Email: ' + details.payer.email_address);
+                                } else {
+                                 // Show a Failed message to the buyer
+                                 alert('Transaction failed by Raja' + '--- Transaction ID-' + details.id);
+                                 //save for failed/Incomplete transaction
+                                    console.log('Payment failed or not completed.');
+                                }
+                        });
+                    }
+                }).render('#paypal-button-container');
+            </script>
+            <footer class="w3-container w3-blue">
+                    <h5>&copy CryptoLand @Fall2023</h5>
+            </footer>
+        </div>
+    </div>
+
+</body>
+
+{% endblock %}
