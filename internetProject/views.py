@@ -36,6 +36,18 @@ from django.urls import reverse_lazy, reverse
 
 from internet_project import settings
 
+def user_profile(request):
+    # Assuming the user is logged in
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+
+    context = {
+        'user': user,
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'internetProject/user_profile.html', context)
+
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
     email_template_name = 'internetProject/password_reset_email.html'
@@ -94,6 +106,9 @@ def index(request):
     api_data = get_crypto_data(limit, offset)
 
     total_items = api_data['data']['stats']['total']
+    # total_pages = (total_items + limit - 1) // limit
+    # Calculate total_pages based on total_items and limit
+    limit = 10  # Adjust this value based on your requirements
     total_pages = (total_items + limit - 1) // limit
     coins_data = api_data['data']['coins']
 
@@ -411,6 +426,27 @@ def signup(request):
 #
 #     return render(request, "internetProject/signup.html")
 
+#
+# def signin(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         pass1 = request.POST['pass1']
+#
+#         user = authenticate(username=username, password=pass1)
+#
+#         if user is not None:
+#             login(request, user)
+#             fname = user.first_name
+#             return render(request, "internetProject/index.html", {'fname': fname})
+#         else:
+#             messages.error(request, "Bad Credentials")
+#             return redirect('home')
+#     return render(request, "internetProject/signin.html")
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
 
 def signin(request):
     if request.method == 'POST':
@@ -421,13 +457,13 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            fname = user.first_name
+            fname = user.first_name if user.first_name else ''  # Check if first_name is not None
             return render(request, "internetProject/index.html", {'fname': fname})
         else:
             messages.error(request, "Bad Credentials")
-            return redirect('home')
-    return render(request, "internetProject/signin.html")
+            # return redirect('home')
 
+    return render(request, "internetProject/signin.html")
 
 def about_us(request):
     return render(request, "about-us.html")
