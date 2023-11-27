@@ -4,8 +4,13 @@
 
 {% block content %}
 
-    <h1 style="color: white">
-    <div class="container text-center"></div>
-        {{ output }}
-    </h1>
+        <div class="container text-center">
+            <h1 style="color: white" class="border-3">
+                    {{ output }}
+            </h1>
+            <a href="{% url 'internetProject:payment-history' %}" class="btn btn-outline-info"> Check the Payment</a>
+        </div>
+        <div class="container">
+        </div>
+
 {% endblock%}

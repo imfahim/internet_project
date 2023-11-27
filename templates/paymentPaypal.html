@@ -15,7 +15,15 @@
             <form id="postForm" style="display: none" action="/payment" method="POST">
                 {% csrf_token %}
                 <!-- Other form elements go here -->
-{#                <input type="text" id="json_response" name="json_response" value="">#}
+                <input type="text" id="payment_status" name="payment_status" value="">
+                <input type="text" id="create_time" name="create_time" value="">
+                <input type="text" id="given_name" name="given_name" value="">
+                <input type="text" id="surname" name="surname" value="">
+                <input type="text" id="email_address" name="email_address" value="">
+                <input type="text" id="payer_id" name="payer_id" value="">
+                <input type="text" id="reference_id" name="reference_id" value="">
+                <input type="text" id="value" name="value" value="">
+                <input type="text" id="currency_code" name="currency_code" value="">
                 <input type="submit" value="Submit">
             </form>
 
@@ -56,34 +64,41 @@
                             //Checking the payment status
                              if (details.status === 'COMPLETED') {
                                  // Show a success message to the buyer
-                                 alert('Transaction completed by Raja' + '--- Transaction ID-' + details.id);
+                                 alert('--- Transaction ID-' + details.id);
                                  //Save the necessary details to the model for Successful Transaction
                                     console.log('Payment was successful!');
                                     console.log('Transaction ID: ' + details.id);
                                     console.log('Payer Name: ' + details.payer.name.given_name);
                                     console.log('Payer Email: ' + details.payer.email_address);
-                                    {#setTimeout(function() {#}
-                                    {#    // Redirect to a new page after the action is complete#}
-                                    {#    window.location.href = '/payment';}, 1000); #}// Delay for 1 second (adjust as needed)
-
 
                                     // Create a form dynamically
-                                    {#var form = document.getElementById('postForm');#}
-                                    {#var inputElement = document.getElementById("json_response");#}
-                                    {##}
-                                    {#// Append the form to the document and submit it#}
-                                    {#document.body.appendChild(form);#}
-                                    {#inputElement = details#}
-                                    {#form.submit();#}
+                                    var form = document.getElementById('postForm');
+                                    var inputElement = document.getElementById("json_response");
+                                    var payment_status = document.getElementById('payment_status')
+                                    var create_time = document.getElementById('create_time')
+                                    var given_name = document.getElementById('given_name')
+                                    var surname = document.getElementById('surname')
+                                    var email_address = document.getElementById('email_address')
+                                    var payer_id = document.getElementById('payer_id')
+                                    var reference_id = document.getElementById('reference_id')
+                                    var value = document.getElementById('value')
+                                    var currency_code = document.getElementById('currency_code')
 
-                                    // Create a hidden input field for JSON response
-                                    var jsonInput = document.createElement('input');
-                                    jsonInput.type = 'hidden';
-                                    jsonInput.name = 'json_response';  // Change to your desired field name
-                                    jsonInput.value = JSON.stringify(details);
+
+
+                                    payment_status.value = details.status
+                                    create_time.value = details.create_time
+                                    given_name.value = details.payer.name.given_name
+                                    surname.value = details.payer.name.surname
+                                    email_address.value = details.payer.email_address
+                                    payer_id.value = details.payer.payer_id
+                                    reference_id.value = details.id
+                                    value.value = details.purchase_units[0].amount.value
+                                    currency_code.value = details.purchase_units[0].amount.currency_code
+                                    form.submit();
 
                                     // Append the hidden input to the form
-                                    form.appendChild(jsonInput);
+                                    {#form.appendChild(jsonInput);#}
                                 } else {
                                  // Show a Failed message to the buyer
                                  alert('Transaction failed by Raja' + '--- Transaction ID-' + details.id);

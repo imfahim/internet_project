@@ -792,24 +792,30 @@ def payment(request):
         #     ]
         # }
         # '''
-        # Decode the JSON data from the request body
-        data = json.loads(request.body)
 
-        paypal_response = request.POST.get['json_response']
-
-        # Parse the JSON response
-        response_data = json.loads(paypal_response)
 
         # Extract relevant details
-        payment_status = response_data.get('status', '')
-        create_time = response_data.get('create_time', '')
-        given_name = response_data.get('payer', {}).get('name', {}).get('given_name', '')
-        surname = response_data.get('payer', {}).get('name', {}).get('surname', '')
-        email_address = response_data.get('payer', {}).get('email_address', '')
-        payer_id = response_data.get('payer', {}).get('payer_id', '')
-        reference_id = response_data.get('purchase_units', [{}])[0].get('reference_id', '')
-        value = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('value', '')
-        currency_code = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('currency_code', '')
+        # payment_status = response_data.get('status', '')
+        # create_time = response_data.get('create_time', '')
+        # given_name = response_data.get('payer', {}).get('name', {}).get('given_name', '')
+        # surname = response_data.get('payer', {}).get('name', {}).get('surname', '')
+        # email_address = response_data.get('payer', {}).get('email_address', '')
+        # payer_id = response_data.get('payer', {}).get('payer_id', '')
+        # reference_id = response_data.get('purchase_units', [{}])[0].get('reference_id', '')
+        # value = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('value', '')
+        # currency_code = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('currency_code', '')
+
+        payment_status = request.POST.get('payment_status')
+        create_time = request.POST.get('create_time')
+        given_name = request.POST.get('given_name')
+        surname = request.POST.get('surname')
+        email_address = request.POST.get('email_address')
+        payer_id = request.POST.get('payer_id')
+        reference_id = request.POST.get('reference_id')
+        value = request.POST.get('value')
+        currency_code = request.POST.get('currency_code')
+
+        # test = request.POST.get['given_name']
 
         # JSON response to check
         JsonResponse = ({
