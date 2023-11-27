@@ -1,0 +1,110 @@
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+ <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+<div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
+
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Ranked</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_ranked %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+              </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
+
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Changed</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_changed %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD' %}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+              </div>
+        </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-dark text-white">
+        <div class="tab-content">
+
+              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
+                  <h3 class="text-center">Top Priced</h3>
+                  <table class="table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Change</th>
+                  </tr>
+                </thead>
+                <tbody style="height: max-content">
+                  {% for rowData in top_priced %}
+                    <tr>
+                        <td>{{ rowData.rank }}</td>
+                        <td>
+                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
+                        </td>
+                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>
+                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
+                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+              </div>
+        </div>
+        </div>
+    </div>

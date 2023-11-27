@@ -31,7 +31,8 @@ import json
 import certifi
 # import pytz
 import requests
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
 from django.urls import reverse_lazy, reverse
 import pytz
 # import requests
@@ -39,17 +40,19 @@ from django.utils import timezone
 
 from internet_project import settings
 
+duration = 15
+@login_required()
 def user_profile(request):
     # Assuming the user is logged in
     user = request.user
     user_profile = UserProfile.objects.get(user=user)
-
     context = {
         'user': user,
         'user_profile': user_profile,
     }
 
     return render(request, 'internetProject/user_profile.html', context)
+
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
@@ -66,8 +69,10 @@ class CustomPasswordResetView(PasswordResetView):
     #
     #     return super().form_valid(form)
 
+
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'internetProject/password_reset_done.html'
+
 
 # class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 #     template_name = 'internetProject/password_reset_confirm.html'
@@ -92,8 +97,11 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         context['uidb64'] = self.kwargs.get('uidb64', '')
         context['token'] = self.kwargs.get('token', '')
         return context
+
+
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'internetProject/password_reset_complete.html'
+
 
 def index(request):
     default_limit = 10
@@ -114,7 +122,7 @@ def index(request):
         coins_data = crypto_data_entry.data
         total_items = crypto_data_entry.total_items
 
-        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=15):
+        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=duration):
             api_data = get_crypto_data(limit, offset)
             crypto_data_entry.data = api_data['data']['coins']
             crypto_data_entry.total_items = api_data['data']['stats']['total']
@@ -128,7 +136,8 @@ def index(request):
         crypto_data = api_data['data']['coins']
         total_items = api_data['data']['stats']['total']
         coins_data = api_data['data']['coins']
-        CryptoData.objects.create(total_items=api_data['data']['stats']['total'], last_updated =timezone.now(), limit=limit, offset=offset, data=crypto_data)
+        CryptoData.objects.create(total_items=api_data['data']['stats']['total'], last_updated=timezone.now(),
+                                  limit=limit, offset=offset, data=crypto_data)
 
     total_pages = (total_items + limit - 1) // limit
 
@@ -158,7 +167,7 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    top_priced= get_top_data("priced")
+    top_priced = get_top_data("priced")
     for rowData in top_priced:
         check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
@@ -166,27 +175,34 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
+    return render(request, 'internetProject/index.html',
+                  {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked,
+                   'top_changed': top_changed, 'top_priced': top_priced})
+
 
 def coin_details(request, coin_id, from_currency, to_currency):
     coin_data = get_coin_details(coin_id)
     currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     print(data)
-    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+    return render(request, 'internetProject/coin_details.html',
+                  {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate,
+                   'from_currency': from_currency,
                    'to_currency': to_currency, 'currencys': currencys})
+
+
 def get_crypto_data(limit, offset):
     url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
     response = requests.get(url)
     data = response.json()
     return data
 
+
 def get_coin_details(coin_id):
     # Check if data exists in the database
     try:
         coin_detail = CoinDetail.objects.get(coin_id=coin_id)
-        # Check if data is not older than 15 minutes
-        if coin_detail.last_updated > timezone.now() - timedelta(minutes=15):
+        if coin_detail.last_updated > timezone.now() - timedelta(minutes=duration):
             return coin_detail
     except CoinDetail.DoesNotExist:
         pass  # Continue to fetch data from the API
@@ -224,6 +240,7 @@ def get_coin_details(coin_id):
 
     return coin_detail
 
+
 def get_top_data(type):
     if type == "changed":
         url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
@@ -234,7 +251,7 @@ def get_top_data(type):
     crypto_data_query = CryptoStateData.objects.filter(type=type)
     if crypto_data_query.exists():
         crypto_data_entry = crypto_data_query.first()
-        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=15):
+        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=duration):
             response = requests.get(url)
             api_data = response.json()
             crypto_data_entry.data = api_data['data']['coins']
@@ -246,6 +263,7 @@ def get_top_data(type):
         crypto_data_entry = api_data['data']['coins']
         CryptoStateData.objects.create(type=type, last_updated=timezone.now(), data=crypto_data_entry)
     return crypto_data_entry.data
+
 
 def print_crypto_info(data):
     response = HttpResponse()
@@ -265,19 +283,29 @@ def print_crypto_info(data):
 # Create your views here.
 def index2(request):
     fxTableData = [
-        {'id': 1, 'Name': 'Bitcoin','logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': -50000,'twoHrPer': -50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': 50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 3, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 1, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': -50000, 'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,
+         'Circulating_Supply': 5},
+        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': 50000, 'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,
+         'Circulating_Supply': 5},
+        {'id': 3, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': -50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': -50000,
          'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer':50000,
+        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
 
     ]
@@ -287,7 +315,7 @@ def index2(request):
         rowData['change2Status'] = 'positiveChange' if rowData['twoHrPer'] > 0 else 'negativeChange'
         rowData['change7Status'] = 'positiveChange' if rowData['sevenDayPer'] > 0 else 'negativeChange'
 
-    return render(request, 'internetProject/index.html',{'fxTableData':fxTableData})
+    return render(request, 'internetProject/index.html', {'fxTableData': fxTableData})
 
 
 def home(request):
@@ -296,6 +324,8 @@ def home(request):
 
 def force_byte(pk):
     pass
+
+
 def signup(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -307,11 +337,11 @@ def signup(request):
 
         if User.objects.filter(username=username):
             messages.error(request, "Username already exists! Please try some other username")
-            #return redirect('home')
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if User.objects.filter(email=email):
             messages.error(request, "Email already registered")
-            #return redirect('home')
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if len(username) > 10:
             messages.error(request, "Passwords didn't match")
@@ -365,7 +395,7 @@ def signup(request):
         messages.success(request,
                          "Your account has been successfully created. We have sent you a confirmation email, please confirm your email to activate your account.")
 
-                        # Welcome Email
+        # Welcome Email
 
         subject = "Welcome to my App"
         message = "Hello" + myuser.first_name + "!! \n" + "Welcome to my App!! \n Thank you for visiting our website \n We have also sent you a confirmation email, please confirm your email address to activate your account. \n\n Thanking you\n "
@@ -396,8 +426,10 @@ def signup(request):
 
         # return redirect('internetProject/signin')
         return redirect('internetProject:signin')
-
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('internetProject:index'))
     return render(request, "internetProject/signup.html")
+
 
 # def signup(request):
 #     if request.method == "POST":
@@ -511,20 +543,23 @@ from django.contrib.auth import authenticate, login
 
 
 def signin(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        pass1 = request.POST['pass1']
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('internetProject:index'))
+    else:
+        if request.method == 'POST':
+            username = request.POST['username']
+            pass1 = request.POST['pass1']
 
-        user = authenticate(username=username, password=pass1)
+            user = authenticate(username=username, password=pass1)
 
-        if user is not None:
-            login(request, user)
-            return HttpResponseRedirect(reverse('internetProject:index'))
-        else:
-            messages.error(request, "Bad Credentials")
-            # return redirect('home')
-
+            if user is not None:
+                login(request, user)
+                return HttpResponseRedirect(reverse('internetProject:index'))
+            else:
+                messages.error(request, "Bad Credentials")
+                # return redirect('home')
     return render(request, "internetProject/signin.html")
+
 
 def about_us(request):
     return render(request, "about-us.html")
@@ -532,6 +567,7 @@ def about_us(request):
 
 def faq(request):
     return render(request, "faq.html")
+
 
 def complaint_form(request):
     msg = ''
@@ -563,10 +599,6 @@ def feedback_form(request):
         form = Feedback()
 
     return render(request, 'feedback.html', {'form': form})
-
-
-
-
 
 
 # def send_email(request):
@@ -613,9 +645,10 @@ def send_email(request):
         return HttpResponse('Failed to send email.')
 
 
+@login_required()
 def signout(request):
     logout(request)
-    #messages.success(request, "Logged Out Successfully!")
+    # messages.success(request, "Logged Out Successfully!")
     return HttpResponseRedirect(reverse('internetProject:index'))
 
 
@@ -633,6 +666,7 @@ def activate(request, uidb64, token):
         return redirect('home')
     else:
         return render(request, 'activation_failed.html')
+
 
 @login_required
 def currency_pay(request, coin_id, from_currency, to_currency):
@@ -813,8 +847,6 @@ def payment(request):
 
 @login_required
 def payment_history(request):
-    payments = Payment.objects.filter(user=request.user) #get the login user payment history
-    return render(request, "templates/payment-history.html",{'payments':payments})
+    payments = Payment.objects.filter(user=request.user)  # get the login user payment history
+    return render(request, "templates/payment-history.html", {'payments': payments})
     # return render(request, "templates/payment-history.html",{'payment':payment})
-
-
