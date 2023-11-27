@@ -519,8 +519,7 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            fname = user.first_name if user.first_name else ''  # Check if first_name is not None
-            return render(request, "internetProject/index.html", {'fname': fname})
+            return HttpResponseRedirect(reverse('internetProject:index'))
         else:
             messages.error(request, "Bad Credentials")
             # return redirect('home')
@@ -616,8 +615,8 @@ def send_email(request):
 
 def signout(request):
     logout(request)
-    messages.success(request, "Logged Out Successfully!")
-    return redirect('home')
+    #messages.success(request, "Logged Out Successfully!")
+    return HttpResponseRedirect(reverse('internetProject:index'))
 
 
 def activate(request, uidb64, token):
