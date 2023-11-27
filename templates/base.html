@@ -26,71 +26,6 @@
       </button>
 
       <div class="collapse navbar-collapse" id="headerMenu">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              Landing Page
-            </a>
-            <div class="dropdown-menu">
-              <a class='dropdown-item' href='landing-page-dark.html'>Landing One</a>
-              <a class='dropdown-item' href='landing-page-dark-two.html'>Landing Two</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              Exchange
-            </a>
-            <div class="dropdown-menu">
-              <a class='dropdown-item' href='exchange-dark.html'>Exchange</a>
-              <a class='dropdown-item' href='exchange-dark-live-price.html'>Exchange Live Price</a>
-              <a class='dropdown-item' href='exchange-dark-ticker.html'>Exchange Ticker</a>
-              <a class='dropdown-item' href='exchange-dark-fluid.html'>Exchange Fluid</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              Markets
-            </a>
-            <div class="dropdown-menu">
-              <a class='dropdown-item' href='markets-dark.html'>Markets</a>
-              <a class='dropdown-item' href='market-capital-dark.html'>Markets Line</a>
-              <a class='dropdown-item' href='market-capital-bar-dark.html'>Markets Bar</a>
-              <a class='dropdown-item' href='market-overview-dark.html'>Market Overview</a>
-              <a class='dropdown-item' href='market-screener-dark.html'>Market Screener</a>
-              <a class='dropdown-item' href='market-crypto-dark.html'>Market Crypto</a>
-            </div>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              Dashboard
-            </a>
-            <div class="dropdown-menu">
-              <a class='dropdown-item' href='settings-profile-dark.html'>Profile</a>
-              <a class='dropdown-item' href='settings-wallet-dark.html'>Wallet</a>
-              <a class='dropdown-item' href='settings-dark.html'>Settings</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              Others
-            </a>
-            <div class="dropdown-menu">
-              <a class='dropdown-item' href='technical-analysis-dark.html'>Technical Analysis</a>
-              <a class='dropdown-item' href='cross-rates-dark.html'>Cross Rates</a>
-              <a class='dropdown-item' href='symbol-info-dark.html'>Symbol Info</a>
-              <a class='dropdown-item' href='heat-map-dark.html'>Heat Map</a>
-              <a class='dropdown-item' href='signin-dark.html'>Sign in</a>
-              <a class='dropdown-item' href='signup-dark.html'>Sign up</a>
-              <a class='dropdown-item' href='404-dark.html'>404</a>
-            </div>
-          </li>
-        </ul>
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
 
@@ -98,12 +33,12 @@
             <li class="nav-item dropdown header-img-icon">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
               aria-expanded="false">
-              <img src="assets/img/avatar.svg" alt="avatar">
+                <i class="bi bi-person"></i>=
             </a>
             <div class="dropdown-menu">
               <div class="dropdown-header d-flex flex-column align-items-center">
                 <div class="figure mb-3">
-                  <img src="assets/img/avatar.svg" alt="">
+                  <i class="bi bi-person"></i>
                 </div>
                 <div class="info text-center">
                   <p class="name font-weight-bold mb-0">{{ user.first_name }} {{ user.last_name }}</p>
@@ -113,7 +48,7 @@
               <div class="dropdown-body">
                 <ul class="profile-nav">
                   <li class="nav-item">
-                    <a class='nav-link' href='settings-profile-dark.html'>
+                    <a class='nav-link' href='/user_profile'>
                       <i class="icon ion-md-person"></i>
                       <span>Profile</span>
                     </a>

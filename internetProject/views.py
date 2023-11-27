@@ -337,11 +337,11 @@ def signup(request):
 
         if User.objects.filter(username=username):
             messages.error(request, "Username already exists! Please try some other username")
-            # return redirect('home')
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if User.objects.filter(email=email):
             messages.error(request, "Email already registered")
-            # return redirect('home')
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if len(username) > 10:
             messages.error(request, "Passwords didn't match")
@@ -426,7 +426,8 @@ def signup(request):
 
         # return redirect('internetProject/signin')
         return redirect('internetProject:signin')
-
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('internetProject:index'))
     return render(request, "internetProject/signup.html")
 
 
