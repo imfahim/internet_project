@@ -1,35 +1,111 @@
-{#<!-- complaints/templates/complaints/complaint_form.html -->#}
-{#{% extends 'base.html' %}#}
-{##}
-{#{% block content %}#}
-{#    <h2>Submit a Complaint</h2>#}
-{#    <form method="post"  action="{% url 'internetProject:complaint_form' %}">#}
-{#        {% csrf_token %}#}
-{#        {{ form.as_p }}#}
-{#        <button type="submit">Submit</button>#}
-{#    </form>#}
-{#{% endblock %}#}
-{##}
-{##}
-
-<!-- complaints/templates/complaints/complaint_form.html -->
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Submit a Complaint</h2>
+  <body id="dark">
 
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="settings mtb15">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12 col-lg-3">
+            <div class="nav flex-column nav-pills settings-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link" id="settings-profile-tab" data-toggle="pill" href="#settings-profile" role="tab" aria-controls="settings-profile" aria-selected="true">
+                <i class="icon ion-md-person"></i> Complain
+              </a>
+              <a class="nav-link active" id="settings-wallet-tab" data-toggle="pill" href="#settings-wallet" role="tab" aria-controls="settings-wallet" aria-selected="false">
+                <i class="icon ion-md-wallet"></i> Feedback
+              </a>
+            </div>
+          </div>
+          <div class="col-md-12 col-lg-9">
+            <div class="tab-content" id="v-pills-tabContent">
+              <div class="tab-pane fade" id="settings-profile" role="tabpanel" aria-labelledby="settings-profile-tab">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">Enter details here</h5>
+                    <div class="settings-profile">
+                      <form method="post" action="{% url 'internetProject:complaint_form' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-row mt-4">
+                          <div class="col-md-6">
+                            {{ form.title.label_tag }}
+                            {{ form.title }}
+                          </div>
+                          <div class="col-md-6">
+                            {{ form.attachment.label_tag }}
+                            {{ form.attachment }}
+                          </div>
+                          <div class="col-md-6">
+                            {{ form.email.label_tag }}
+                            {{ form.email }}
+                          </div>
+                          <div class="col-md-6">
+                            {{ form.contact_number.label_tag }}
+                            {{ form.contact_number }}
+                          </div>
+                             <div class="col-md-6">
+                            {{ form.description.label_tag }}
+                            {{ form.description }}
+                          </div>
+                          <div class="col-md-12">
+                            <input type="submit" value="Submit">
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade show active" id="settings-wallet" role="tabpanel" aria-labelledby="settings-wallet-tab">
+                <div class="wallet">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-9">
+                      <div class="tab-content">
+                        <div class="tab-pane fade show active" id="coinBTC" role="tabpanel">
+                          <div class="card">
+                            <div class="card-body">
+                              <h5 class="card-title">Enter Feedback here</h5>
+                              <div class="settings-profile">
+                                <form method="post" action="{% url 'internetProject:feedback_form' %}" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <div class="form-row mt-4">
+                                    <div class="col-md-6">
+                                      {{ form.title.label_tag }}
+                                      {{ form.title }}
+                                    </div>
 
-    <form method="post" action="{% url  'internetProject:complaint_form' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-         <input type="submit" value="Submit">
-    </form>
+                                    <div class="col-md-6">
+                                      {{ form.email.label_tag }}
+                                      {{ form.email }}
+                                    </div>
+                                        <div class="col-md-6">
+                                      {{ form.description.label_tag }}
+                                      {{ form.description }}
+                                    </div>
+                                    <div class="col-md-12">
+                                      <input type="submit" value="Submit">
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="assets/js/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/amcharts-core.min.js"></script>
+    <script src="assets/js/amcharts.min.js"></script>
+    <script src="assets/js/custom.js"></script>
+  </body>
 {% endblock %}
-
