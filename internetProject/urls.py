@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from internetProject.views import CustomPasswordResetView, CustomPasswordResetDoneView, CustomPasswordResetConfirmView, \
-    CustomPasswordResetCompleteView
+    CustomPasswordResetCompleteView, PaymentView
 
 app_name = 'internetProject'
 
@@ -17,7 +17,7 @@ urlpatterns = [
     path('currency/<str:from_currency>/<str:to_currency>/', views.currency, name='currency'),
     path('currency_pay/<str:coin_id>/<str:from_currency>/<str:to_currency>/', views.currency_pay, name='currency_pay'),
     path('index_jk/', views.index_jk, name='index_jk'),
-    path('payment/', views.payment, name='payment'),
+    path('payment/<str:from_currency>/<str:to_currency>/', PaymentView.as_view(), name='PaymentView'),
     path('payment-history/', views.payment_history, name='payment-history'),
     path('about_us/', views.about_us, name='about_us'),
     path('faq/', views.faq, name='faq'),

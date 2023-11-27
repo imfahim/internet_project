@@ -635,18 +635,19 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'activation_failed.html')
 
-
 @login_required
 def currency_pay(request, coin_id, from_currency, to_currency):
-    return render(request, 'currency_pay.html', {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
+    return render(request, 'currency_pay.html',
+                  {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
 
 
 def currency(request, from_currency, to_currency):
     currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     print(data)
-    return render(request, 'internetProject/coin_details.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
-                                             'to_currency': to_currency, 'currencys': currencys})
+    return render(request, 'internetProject/coin_details.html',
+                  {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+                   'to_currency': to_currency, 'currencys': currencys})
 
 
 def get_currency_rate(request, from_currency, to_currency):
@@ -678,9 +679,26 @@ def get_currency_rate(request, from_currency, to_currency):
         return render(request, 'currency.html', {'error': "Error fetching data"})
 
 
-
 def index_jk(request):
     return render(request, "index_jk.html")
+
+
+# view for PayPal Payment Gateway Page
+class PaymentView(TemplateView):
+    # template_name = 'paymentPaypal.html'
+    def get(self, request, from_currency, to_currency, *args, **kwargs):
+        amount = request.GET.get('amount')
+        if amount:
+            data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+            total_price = Decimal(amount) * Decimal(latest_rate['close']).quantize(Decimal('0.00'))
+            context = {
+                'total_price': total_price,
+            }
+            print(context)
+            return render(request, "paymentPaypal.html", context)
+        else:
+            return HttpResponse("Amount is required.", status=400)
+
 
 @login_required
 def payment(request):

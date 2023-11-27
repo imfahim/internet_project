@@ -93,7 +93,7 @@
                 </form>
 
                 </br>
-                <select id="to_currency_select" onchange="location= this.value;">
+                <select  class="btn btn-outline-primary"  id="to_currency_select" onchange="location= this.value;">
                     {% for currency in currencys %}
                         <option value="{% url 'internetProject:coin_details' coin_id from_currency currency %}"
                                 {% if currency == to_currency %}selected{% endif %}>{{ currency }}</option>
