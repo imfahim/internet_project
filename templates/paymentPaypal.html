@@ -15,6 +15,7 @@
             <form id="postForm" style="display: none" action="/payment" method="POST">
                 {% csrf_token %}
                 <!-- Other form elements go here -->
+{#                <input type="text" id="json_response" name="json_response" value="">#}
                 <input type="submit" value="Submit">
             </form>
 
@@ -67,11 +68,22 @@
 
 
                                     // Create a form dynamically
-                                    var form = document.getElementById('postForm');
-
-                                    // Append the form to the document and submit it
+                                    {#var form = document.getElementById('postForm');#}
+                                    {#var inputElement = document.getElementById("json_response");#}
+                                    {##}
+                                    {#// Append the form to the document and submit it#}
                                     {#document.body.appendChild(form);#}
-                                    form.submit();
+                                    {#inputElement = details#}
+                                    {#form.submit();#}
+
+                                    // Create a hidden input field for JSON response
+                                    var jsonInput = document.createElement('input');
+                                    jsonInput.type = 'hidden';
+                                    jsonInput.name = 'json_response';  // Change to your desired field name
+                                    jsonInput.value = JSON.stringify(details);
+
+                                    // Append the hidden input to the form
+                                    form.appendChild(jsonInput);
                                 } else {
                                  // Show a Failed message to the buyer
                                  alert('Transaction failed by Raja' + '--- Transaction ID-' + details.id);

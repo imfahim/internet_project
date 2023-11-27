@@ -703,61 +703,65 @@ class PaymentView(TemplateView):
 def payment(request):
     if request.method == 'POST':
         # Static PayPal JSON response
-        paypal_response = '''
-        {
-            "id": "PAYPAL_TRANSACTION_ID",
-            "intent": "CAPTURE",
-            "status": "COMPLETED",
-            "create_time": "2023-11-23T12:34:56Z",
-            "update_time": "2023-11-23T12:35:00Z",
-            "payer": {
-                "name": {
-                    "given_name": "John",
-                    "surname": "Doe"
-                },
-                "email_address": "john.doe@example.com",
-                "payer_id": "PAYPAL_PAYER_ID",
-                "address": {
-                    "country_code": "US",
-                    "postal_code": "12345",
-                    "state": "CA",
-                    "city": "San Jose",
-                    "line1": "123 Main St"
-                }
-            },
-            "purchase_units": [
-                {
-                    "reference_id": "REFERENCE_ID",
-                    "amount": {
-                        "value": "0.01",
-                        "currency_code": "USD",
-                        "breakdown": {
-                            "item_total": {
-                                "currency_code": "USD",
-                                "value": "0.01"
-                            }
-                        }
-                    },
-                    "payee": {
-                        "email_address": "merchant@example.com",
-                        "merchant_id": "MERCHANT_ID"
-                    },
-                    "shipping": {
-                        "address": {
-                            "name": {
-                                "full_name": "John Doe"
-                            },
-                            "address_line_1": "123 Main St",
-                            "admin_area_1": "CA",
-                            "admin_area_2": "San Jose",
-                            "postal_code": "12345",
-                            "country_code": "US"
-                        }
-                    }
-                }
-            ]
-        }
-        '''
+        # paypal_response = '''
+        # {
+        #     "id": "PAYPAL_TRANSACTION_ID",
+        #     "intent": "CAPTURE",
+        #     "status": "COMPLETED",
+        #     "create_time": "2023-11-23T12:34:56Z",
+        #     "update_time": "2023-11-23T12:35:00Z",
+        #     "payer": {
+        #         "name": {
+        #             "given_name": "John",
+        #             "surname": "Doe"
+        #         },
+        #         "email_address": "john.doe@example.com",
+        #         "payer_id": "PAYPAL_PAYER_ID",
+        #         "address": {
+        #             "country_code": "US",
+        #             "postal_code": "12345",
+        #             "state": "CA",
+        #             "city": "San Jose",
+        #             "line1": "123 Main St"
+        #         }
+        #     },
+        #     "purchase_units": [
+        #         {
+        #             "reference_id": "REFERENCE_ID",
+        #             "amount": {
+        #                 "value": "0.01",
+        #                 "currency_code": "USD",
+        #                 "breakdown": {
+        #                     "item_total": {
+        #                         "currency_code": "USD",
+        #                         "value": "0.01"
+        #                     }
+        #                 }
+        #             },
+        #             "payee": {
+        #                 "email_address": "merchant@example.com",
+        #                 "merchant_id": "MERCHANT_ID"
+        #             },
+        #             "shipping": {
+        #                 "address": {
+        #                     "name": {
+        #                         "full_name": "John Doe"
+        #                     },
+        #                     "address_line_1": "123 Main St",
+        #                     "admin_area_1": "CA",
+        #                     "admin_area_2": "San Jose",
+        #                     "postal_code": "12345",
+        #                     "country_code": "US"
+        #                 }
+        #             }
+        #         }
+        #     ]
+        # }
+        # '''
+        # Decode the JSON data from the request body
+        data = json.loads(request.body)
+
+        paypal_response = request.POST.get['json_response']
 
         # Parse the JSON response
         response_data = json.loads(paypal_response)
