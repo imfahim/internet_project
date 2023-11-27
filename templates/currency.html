@@ -3,16 +3,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Currency Exchange</title>
-    <!-- import Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Title</title>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <link rel="stylesheet" href="{% static 'css/currencyTable.css' %}">
 </head>
 <body>
-    <!-- display real time rate -->
-    <div>Current Rate: <span id="currentRate">Loading...</span></div>
-    <!-- chart container -->
-    <canvas id="rateChart"></canvas>
-    <!-- import javascript currencyTable.js -->
-    <script src="{% static 'js/currencyTable.js' %}"></script>
+
+<div class="flex-container">
+
+    <div class="rate-info">
+        <h1>{{ from_currency }}: {{ latest_rate.close }}
+            <select id="to_currency_select" onchange = "location= this.value;">
+                {% for currency in currencys %}
+                <option value="{% url 'internetProject:currency' from_currency currency %}" {% if currency == to_currency %}selected{% endif %}>{{ currency }}</option>
+                {% endfor %}
+            </select>
+        </h1>
+        <a href="{% url 'internetProject:currency_pay' from_currency to_currency %}">
+            <button type="button" >Pay Now</button>
+        </a>
+    </div>
+    <div class="chart-container">
+        <div style="width: 100%;">
+            <canvas id="rateCharMonth"></canvas>
+        </div>
+    </div>
+</div>
+{#<script>#}
+{# const fromCurrency = "{{ from_currency }}";#}
+{# const toCurrency = "{{ to_currency }}";#}
+{# const historicalData = JSON.parse('{{ data | safe }}');#}
+{#</script>#}
+{##}
+{#<script src="{% static 'js/currencyTableMonth.js' %}"></script>#}
 </body>
 </html>

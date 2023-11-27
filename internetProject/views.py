@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
@@ -15,6 +16,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.views.generic import TemplateView
 from internet_project.settings import REQUESTS_CA_BUNDLE
+from .models import Complaint, Feedback, Currency_rate
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
 from .models import Currency_rate
@@ -130,7 +132,7 @@ def index(request):
 
     return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
 
-def coin_details(request, coin_id):
+def coin_details(request, coin_id, from_currency, to_currency):
     url = f"https://api.coinranking.com/v2/coin/{coin_id}"
     response = requests.get(url)
     api_data = response.json()
@@ -141,7 +143,12 @@ def coin_details(request, coin_id):
     coin_data['priceAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
     timestamp = int(coin_data['allTimeHigh']['timestamp'])
     coin_data['allTimeHigh']['timestamp'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data})
+
+    currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
+    data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+    print(data)
+    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+                   'to_currency': to_currency, 'currencys': currencys})
 
 def get_crypto_data(limit, offset):
     url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
@@ -425,42 +432,47 @@ def activate(request, uidb64, token):
         return render(request, 'activation_failed.html')
 
 
+@login_required
+def currency_pay(request, coin_id, from_currency, to_currency):
+    return render(request, 'currency_pay.html', {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
+
+
 def currency(request, from_currency, to_currency):
-    rate = get_exchange_rate(from_currency, to_currency)
-    # get current time
-    eastern = pytz.timezone('US/Eastern')
-    current_time = datetime.now(pytz.utc).astimezone(eastern).isoformat()
-    now_rates = Currency_rate.objects.filter(from_currency=from_currency, to_currency=to_currency).order_by('-time')[
-                :10]
-
-    return render(request, 'templates/currency.html',
-                  {'rate': rate, 'from_currency': from_currency, 'to_currency': to_currency
-                      , 'current_time': current_time, 'now_rates': now_rates})
+    currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
+    data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+    print(data)
+    return render(request, 'internetProject/coin_details.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+                                             'to_currency': to_currency, 'currencys': currencys})
 
 
-def get_exchange_rate(from_currency, to_currency):
-    # 假设您已将API密钥存储在Django的settings文件中
+def get_currency_rate(request, from_currency, to_currency):
     api_key = settings.EXCHANGE_RATE_API_KEY
-    url = f"https://min-api.cryptocompare.com/data/price?fsym={from_currency}&tsyms={to_currency}&api_key={api_key}"
+    url = 'https://min-api.cryptocompare.com/data/v2/histoday'
 
-    # try:
-    response = requests.get(url)
-    response.raise_for_status()  # 将触发HTTPError，如果请求返回4xx或5xx响应
-    data = response.json()
+    params = {
+        'fsym': from_currency,
+        'tsym': to_currency,
+        'limit': 30,
+        'api_key': api_key
+    }
 
-    # # 解析JSON数据以获取汇率
-    rate = data.get(to_currency)
-    if rate:
-        # get current time
-        rate = Decimal(rate).quantize(Decimal('.000001'))
-        est = pytz.timezone('US/Eastern')
-        current_time_est = datetime.now().astimezone(est)
-        # put the rate into the database for future use
-        Currency_rate.objects.create(from_currency=from_currency, to_currency=to_currency, rate=rate,
-                                     time=current_time_est)
-        return rate
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        data = response.json()['Data']['Data']
+        latest_rate = data[-1]
+        for rate in data:
+            timestamp = datetime.fromtimestamp(rate['time'])
+            Currency_rate.objects.create(
+                from_currency=from_currency,
+                to_currency=to_currency,
+                rate=rate['close'],
+                time=timestamp,
+            )
+        data = json.dumps(data)
+        return data, latest_rate
     else:
-        raise ValueError("Currency not found.")
+        return render(request, 'currency.html', {'error': "Error fetching data"})
+
 
 
 def index_jk(request):
