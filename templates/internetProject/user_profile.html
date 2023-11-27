@@ -1,0 +1,96 @@
+{#<!-- templates/internetProject/user_profile.html -->#}
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport" content="width=device-width, initial-scale=1.0">#}
+{#    <title>User Profile</title>#}
+{#</head>#}
+{#<body>#}
+{#    <h1>User Profile</h1>#}
+{#    <p>Username: {{ user.username }}</p>#}
+{#    <p>Email: {{ user.email }}</p>#}
+{#    <p>First Name: {{ user.first_name }}</p>#}
+{#    <p>Last Name: {{ user.last_name }}</p>#}
+{#    <!-- Add other fields as needed -->#}
+{##}
+{#    {% if user_profile.id_proof %}#}
+{#         <p>ID Proof: <a href="{{ user_profile.id_proof_path.url }}" target="_blank">View ID Proof</a></p>#}
+{#         <p>ID Proof: <img src="{{ user_profile.id_proof_path.url  }}" alt="ID Proof"></p>#}
+{#    {% endif %}#}
+{#    <!-- Add other fields from the user profile -->#}
+{##}
+{#    <!-- Add other sections or details as needed -->#}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+
+    <style>
+        body {
+            background-color: #000000; /* Black background color */
+            color: #ffffff; /* White text color */
+            font-family: 'Arial', sans-serif;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #1a1a1a; /* Dark gray background color */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+        }
+        h1 {
+            color: #007bff; /* Blue color for headings */
+        }
+        p {
+            color: #dee2e6; /* Light gray color for paragraphs */
+        }
+        img.profile-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
+        .id-proof {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container profile-container">
+    <div class="text-center">
+        {% if user_profile.id_proof_path %}
+        <p><strong>ID Proof:</strong></p>
+        <img class="id-proof" src="{{ user_profile.id_proof_path.url }}" alt="ID Proof">
+    {% endif %}
+        <h1>User Profile</h1>
+    </div>
+
+    <div>
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+    </div>
+
+
+
+    <!-- Add other fields from the user profile -->
+
+    <!-- Add other sections or details as needed -->
+</div>
+
+</body>
+</html>

@@ -213,11 +213,16 @@
                 <div class="form-row">
                     <div class="col-md-6">
                         <select class="custom-select" name="page" id="page">
-                            {% for page_number in total_pages|range %}
-                                <option value="{{ page_number }}" {% if page_number == page %}selected{% endif %}>
+{#                            {% for page_number in total_pages|range %}#}
+{#                                <option value="{{ page_number }}" {% if page_number == page %}selected{% endif %}>#}
+{#                                    {{ page_number }}#}
+{#                                </option>#}
+{#                            {% endfor %}#}
+                              {% for page_number in total_pages|default:0|range %}
+                                  <option value="{{ page_number }}" {% if page_number == page %}selected{% endif %}>
                                     {{ page_number }}
-                                </option>
-                            {% endfor %}
+                                  </option>
+                              {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-6">
@@ -271,7 +276,7 @@
                         {% endfor %}
                     </tr>
                 {% endfor %}
-
+{#                    <a href="{% url 'user_profile' %}">View Profile</a>#}
                   </tbody>
                 </table>
               </div>

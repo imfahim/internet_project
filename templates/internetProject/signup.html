@@ -1,45 +1,149 @@
-<!doctype html>
+{#<!doctype html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <meta name="viewport"#}
+{#          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">#}
+{#    <meta http-equiv="X-UA-Compatible" content="ie=edge">#}
+{#    <title>Document</title>#}
+{#</head>#}
+{#<body>#}
+{#    {% for message in messages %}#}
+{#    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">#}
+{#        <strong>Message</strong> {{ message }}#}
+{#        <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+{#            <span aria-hidden="true">&times;</span>#}
+{#        </button>#}
+{#    </div>#}
+{#    {% endfor %}#}
+{#<h3>Signup</h3>#}
+{#<form action="/signup" method="post" enctype="multipart/form-data">#}
+{#    {% csrf_token %}#}
+{#    <label for="">Username</label>#}
+{#    <input type="text" id="username" name="username" placeholder="Create a username (only letters and numbers" Required>#}
+{#    <br>#}
+{#    <label for="">First Name</label>#}
+{#    <input type="text" id="fname" name="fname" placeholder="Enter your first name" Required>#}
+{#    <br>#}
+{#    <label for="">Last Name</label>#}
+{#    <input type="text" id="lname" name="lname" placeholder="Enter your last name" Required>#}
+{#    <br>#}
+{#    <label for="">Email Address</label>#}
+{#    <input type="email" id="email" name="email" placeholder="Enter your Email Address" Required>#}
+{#    <br>#}
+{#    <label for="">Password</label>#}
+{#    <input type="password" id="pass1" name="pass1" placeholder="Create a Password" Required>#}
+{#    <br>#}
+{#    <label for="">Confirm your Password</label>#}
+{#    <input type="password" id="pass2" name="pass2" placeholder="Confirm your Password" Required>#}
+{#    <br>#}
+{#    <label for="id_proof">Upload ID Proof</label>#}
+{#    <input type="file" id="id_proof" name="id_proof" accept="image/*,application/pdf" required>#}
+{#    <small>Accepted formats: Image files (jpeg, png) or PDF</small>#}
+{#    <br>#}
+{##}
+{#    <button type="submit">Sign Up</button>#}
+{#</form>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000000; /* Black background color */
+            color: #ffffff; /* White text color */
+        }
+        .container {
+            color: #ffffff; /* White text color */
+        }
+        .bg-white {
+            background-color: #000000 !important; /* Black background for the sign-up box */
+            color: #ffffff; /* White text color for the sign-up box */
+        }
+        .form-control {
+            background-color: #333333; /* Dark background for text fields */
+            color: #ffffff; /* White text color for text fields */
+        }
+        label {
+            color: #ffffff; /* White color for labels */
+        }
+        .text-signup {
+            color: #ffffff; /* White color for the sign-up title */
+        }
+    </style>
 </head>
 <body>
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        <strong>Message</strong> {{ message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    {% endfor %}
-<h3>Signup</h3>
-<form action="/signup" method="post">
-    {% csrf_token %}
-    <label for="">Username</label>
-    <input type="text" id="username" name="username" placeholder="Create a username (only letters and numbers" Required>
-    <br>
-    <label for="">First Name</label>
-    <input type="text" id="fname" name="fname" placeholder="Enter your first name" Required>
-    <br>
-    <label for="">Last Name</label>
-    <input type="text" id="lname" name="lname" placeholder="Enter your last name" Required>
-    <br>
-    <label for="">Email Address</label>
-    <input type="email" id="email" name="email" placeholder="Enter your Email Address" Required>
-    <br>
-    <label for="">Password</label>
-    <input type="password" id="pass1" name="pass1" placeholder="Create a Password" Required>
-    <br>
-    <label for="">Confirm your Password</label>
-    <input type="password" id="pass2" name="pass2" placeholder="Confirm your Password" Required>
-    <br>
 
-    <button type="submit">Sign Up</button>
-</form>
+<div class="container mt-5">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message:</strong> {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    <div class="col-md-6 offset-md-3 bg-white p-4 shadow rounded">
+        <h3 class="text-center text-signup mb-4">Sign Up</h3>
+        <form action="/signup" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="Create a username (only letters and numbers)" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fname">First Name</label>
+                <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter your first name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="lname">Last Name</label>
+                <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter your last name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Email Address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pass1">Password</label>
+                <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Create a Password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pass2">Confirm your Password</label>
+                <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Confirm your Password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_proof">Upload ID Proof</label>
+                <input type="file" class="form-control" id="id_proof" name="id_proof" accept="image/*,application/pdf" required>
+                <small>Accepted formats: Image files (jpeg, png) or PDF</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies (optional, for Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

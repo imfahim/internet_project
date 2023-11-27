@@ -6,6 +6,14 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 
 # Create your models here.
+from django.contrib.auth.models import User
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    id_proof_path = models.FileField(upload_to='id_proofs/', null=True, blank=True)
+
+    def __str__(self):
+        return self.user.username
 class Currency_rate(models.Model):
     from_currency = models.CharField(max_length=3)
     to_currency = models.CharField(max_length=3)

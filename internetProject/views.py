@@ -1,3 +1,6 @@
+import os
+
+import pytz
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites import requests
@@ -19,14 +22,14 @@ from internet_project.settings import REQUESTS_CA_BUNDLE
 from .models import Complaint, Feedback, Currency_rate
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
-from .models import Currency_rate, CryptoData, CoinDetail, CryptoStateData, Payment
+from .models import Currency_rate, CryptoData, CoinDetail, CryptoStateData, Payment, UserProfile
 from _decimal import Decimal
 from datetime import datetime, timedelta
 from math import copysign
 # import pytz
 import json
 import certifi
-import pytz
+# import pytz
 import requests
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy, reverse
@@ -36,7 +39,17 @@ from django.utils import timezone
 
 from internet_project import settings
 
-home = '/'
+def user_profile(request):
+    # Assuming the user is logged in
+    user = request.user
+    user_profile = UserProfile.objects.get(user=user)
+
+    context = {
+        'user': user,
+        'user_profile': user_profile,
+    }
+
+    return render(request, 'internetProject/user_profile.html', context)
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
@@ -283,8 +296,6 @@ def home(request):
 
 def force_byte(pk):
     pass
-
-
 def signup(request):
     if request.method == "POST":
         username = request.POST['username']
@@ -312,17 +323,49 @@ def signup(request):
             messages.error(request, "Username must be Alpha-Numeric!")
             return redirect('home')
 
+        # Create a User instance
         myuser = User.objects.create_user(username, email, pass1)
         myuser.first_name = fname
         myuser.last_name = lname
-        myuser.is_active = False
+        myuser.is_active = True
 
+        # Save the User instance
         myuser.save()
 
-        messages.success(request,
-                         "Your account has been successfully created.We have sent you a confirmation email, please confirm your email in order to activate your account  ")
+        # Create a UserProfile instance and link it to the User
+        user_profile = UserProfile(user=myuser)
+        id_proof = request.FILES.get('id_proof')
 
-        # Welcome Email
+        if id_proof:
+            # Validate file format (optional)
+            if not id_proof.name.lower().endswith(('.jpg', '.jpeg', '.png', '.pdf')):
+                messages.error(request, "Invalid ID proof format. Please upload a valid image (jpg, jpeg, png) or PDF.")
+                return redirect('home')
+
+            # Specify the subfolder within MEDIA_ROOT to store ID proofs
+            id_proof_subfolder = 'id_proofs'
+
+            # Construct the path to the subfolder
+            id_proof_path = os.path.join(settings.MEDIA_ROOT, id_proof_subfolder, id_proof.name)
+
+            # Create the subfolder if it doesn't exist
+            os.makedirs(os.path.dirname(id_proof_path), exist_ok=True)
+
+            # Save the ID proof file to the specified subfolder
+            with open(id_proof_path, 'wb') as destination:
+                for chunk in id_proof.chunks():
+                    destination.write(chunk)
+
+            # Save the ID proof path to the UserProfile model
+            user_profile.id_proof_path = id_proof_path
+
+        # Save the UserProfile instance
+        user_profile.save()
+
+        messages.success(request,
+                         "Your account has been successfully created. We have sent you a confirmation email, please confirm your email to activate your account.")
+
+                        # Welcome Email
 
         subject = "Welcome to my App"
         message = "Hello" + myuser.first_name + "!! \n" + "Welcome to my App!! \n Thank you for visiting our website \n We have also sent you a confirmation email, please confirm your email address to activate your account. \n\n Thanking you\n "
@@ -356,6 +399,116 @@ def signup(request):
 
     return render(request, "internetProject/signup.html")
 
+# def signup(request):
+#     if request.method == "POST":
+#         username = request.POST['username']
+#         fname = request.POST['fname']
+#         lname = request.POST['lname']
+#         email = request.POST['email']
+#         pass1 = request.POST['pass1']
+#         pass2 = request.POST['pass2']
+#
+#         if User.objects.filter(username=username):
+#             messages.error(request, "Username already exists! Please try some other username")
+#             return redirect('home')
+#
+#         if User.objects.filter(email=email):
+#             messages.error(request, "Email already registered")
+#             return redirect('home')
+#
+#         if len(username) > 10:
+#             messages.error(request, "Passwords didn't match")
+#
+#         if pass1 != pass2:
+#             messages.error(request, "Passwords didn't match!")
+#
+#         if not username.isalnum():
+#             messages.error(request, "Username must be Alpha-Numeric!")
+#             return redirect('home')
+#
+#
+#
+#         myuser = User.objects.create_user(username, email, pass1)
+#         myuser.first_name = fname
+#         myuser.last_name = lname
+#         myuser.is_active = True
+#
+#         id_proof = request.FILES.get('id_proof')
+#
+#         if id_proof:
+#             # Validate file format (optional)
+#             if not id_proof.name.lower().endswith(('.jpg', '.jpeg', '.png', '.pdf')):
+#                 messages.error(request, "Invalid ID proof format. Please upload a valid image (jpg, jpeg, png) or PDF.")
+#                 return redirect('home')
+#
+#             # Save the ID proof file to MEDIA_ROOT
+#             id_proof_path = os.path.join(settings.MEDIA_ROOT, id_proof.name)
+#             with open(id_proof_path, 'wb') as destination:
+#                 for chunk in id_proof.chunks():
+#                     destination.write(chunk)
+#
+#             # Save the ID proof path to the user model or your database
+#             myuser.id_proof_path = id_proof_path
+#
+#         myuser.save()
+#
+#         messages.success(request,
+#                          "Your account has been successfully created.We have sent you a confirmation email, please confirm your email in order to activate your account  ")
+#
+#         # Welcome Email
+#
+#         subject = "Welcome to my App"
+#         message = "Hello" + myuser.first_name + "!! \n" + "Welcome to my App!! \n Thank you for visiting our website \n We have also sent you a confirmation email, please confirm your email address to activate your account. \n\n Thanking you\n "
+#         from_email = settings.EMAIL_HOST_USER
+#         to_list = [myuser.email]
+#         send_mail(subject, message, from_email, to_list)
+#
+#         # Email Address Confirmation Email
+#
+#         current_site = get_current_site(request)
+#         email_subject = "Confirm your email @ Internet Project"
+#         message2 = render_to_string('email_confirmation.html', {
+#             'name': myuser.first_name,
+#             'domain': current_site.domain,
+#             'uid': urlsafe_base64_encode(force_bytes(myuser.pk)),
+#             'token': generate_token.make_token(myuser)
+#
+#         })
+#         email = EmailMessage(
+#             email_subject,
+#             message2,
+#             settings.EMAIL_HOST_USER,
+#             [myuser.email],
+#
+#         )
+#         email.fail_silently = True
+#         email.send()
+#
+#         return redirect('internetProject/signin')
+#
+#     return render(request, "internetProject/signup.html")
+
+#
+# def signin(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         pass1 = request.POST['pass1']
+#
+#         user = authenticate(username=username, password=pass1)
+#
+#         if user is not None:
+#             login(request, user)
+#             fname = user.first_name
+#             return render(request, "internetProject/index.html", {'fname': fname})
+#         else:
+#             messages.error(request, "Bad Credentials")
+#             return redirect('home')
+#     return render(request, "internetProject/signin.html")
+
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+
 
 def signin(request):
     if request.method == 'POST':
@@ -366,13 +519,13 @@ def signin(request):
 
         if user is not None:
             login(request, user)
-            fname = user.first_name
+            fname = user.first_name if user.first_name else ''  # Check if first_name is not None
             return render(request, "internetProject/index.html", {'fname': fname})
         else:
             messages.error(request, "Bad Credentials")
-            return redirect('home')
-    return render(request, "internetProject/signin.html")
+            # return redirect('home')
 
+    return render(request, "internetProject/signin.html")
 
 def about_us(request):
     return render(request, "about-us.html")
