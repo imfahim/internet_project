@@ -571,7 +571,7 @@ def payment(request):
         create_time=create_time
     )
 
-    # payment.save() # for saving the Respose
+    payment.save() # for saving the Respose
     output = ("Payment processed and stored successfully.")
     return render(request, "templates/payment.html",{'output':output,'JsonResponse':JsonResponse})
 
