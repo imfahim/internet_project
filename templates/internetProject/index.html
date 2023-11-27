@@ -12,196 +12,199 @@
     </div>
     {% endfor %}
 
-    <div class="col-md-4">
-        <div class="card bg-dark text-white">
-        <div class="tab-content">
-
-              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
-                  <h3 class="text-center">Top Ranked</h3>
-                  <table class="table">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Change</th>
-                  </tr>
-                </thead>
-                <tbody style="height: max-content">
-                  {% for rowData in top_ranked %}
-                    <tr>
-                        <td>{{ rowData.rank }}</td>
-                        <td>
-                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
-                        </td>
-                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>
-                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
-                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-
-              </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-dark text-white">
-        <div class="tab-content">
-
-              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
-                  <h3 class="text-center">Top Changed</h3>
-                  <table class="table">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Change</th>
-                  </tr>
-                </thead>
-                <tbody style="height: max-content">
-                  {% for rowData in top_changed %}
-                    <tr>
-                        <td>{{ rowData.rank }}</td>
-                        <td>
-                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
-                        </td>
-                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD' %}">{{ rowData.name }}</a></td>
-                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
-                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-
-              </div>
-        </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-dark text-white">
-        <div class="tab-content">
-
-              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">
-                  <h3 class="text-center">Top Priced</h3>
-                  <table class="table">
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Change</th>
-                  </tr>
-                </thead>
-                <tbody style="height: max-content">
-                  {% for rowData in top_priced %}
-                    <tr>
-                        <td>{{ rowData.rank }}</td>
-                        <td>
-                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">
-                        </td>
-                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>
-                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>
-                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-              </table>
-
-              </div>
-        </div>
-        </div>
-    </div>
-
+ {% include 'templates/internetProject/landingCards.html' %}
     <br>
-        <div class="col-md-4">
-          <div class="markets-capital-item"  style="margin-bottom: 0px;">
-            <h2>
-              <img src="{{ top_ranked.0.iconUrl }}" alt="{{ top_ranked.0.symbol }}">
-              <span>{{ top_ranked.0.symbol }}</span>
-            </h2>
-            {% if  top_ranked.0.changeStatus == 'red' %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
-                <h3 class="red">+{{ top_ranked.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
-              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
-              <canvas></canvas>
-            </div>
-          {% else %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
-                <h3 class="green">{{ top_ranked.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
-              data-bg="rgba(38,222,129,.1)" data-border="18d877">
-              <canvas></canvas>
-            </div>
-          {% endif %}
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="markets-capital-item" style="margin-bottom: 0px;">
-            <h2>
-              <img src="{{ top_changed.0.iconUrl }}" alt="{{ top_changed.0.symbol }}">
-              <span>{{ top_changed.0.symbol }}</span>
-            </h2>
-              {% if  top_changed.0.changeStatus == 'red' %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
-                <h3 class="red">+{{ top_changed.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
-              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
-              <canvas></canvas>
-            </div>
-          {% else %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
-                <h3 class="green">{{ top_changed.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
-              data-bg="rgba(38,222,129,.1)" data-border="18d877">
-              <canvas></canvas>
-            </div>
-          {% endif %}
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="markets-capital-item" style="margin-bottom: 0px;">
-            <h2>
-              <img src="{{ top_priced.0.iconUrl }}" alt="{{ top_priced.0.symbol }}">
-              <span>{{ top_priced.0.symbol }}</span>
-            </h2>
-          {% if  top_priced.0.changeStatus == 'red' %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
-                <h3 class="red">+{{ top_priced.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
-              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
-              <canvas></canvas>
-            </div>
-          {% else %}
-            <div class="markets-capital-details">
-              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
-                <h3 class="green">{{ top_priced.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
-            </div>
-            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
-              data-bg="rgba(38,222,129,.1)" data-border="18d877">
-              <canvas></canvas>
-            </div>
-          {% endif %}
+ {% include 'templates/internetProject/landingGraphCards.html' %}
+{#    <div class="col-md-4">#}
+{#        <div class="card bg-dark text-white">#}
+{#        <div class="tab-content">#}
+{##}
+{#              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">#}
+{#                  <h3 class="text-center">Top Ranked</h3>#}
+{#                  <table class="table">#}
+{#                <thead>#}
+{#                  <tr>#}
+{#                    <th>Rank</th>#}
+{#                    <th></th>#}
+{#                    <th>Name</th>#}
+{#                    <th>Price</th>#}
+{#                    <th>Change</th>#}
+{#                  </tr>#}
+{#                </thead>#}
+{#                <tbody style="height: max-content">#}
+{#                  {% for rowData in top_ranked %}#}
+{#                    <tr>#}
+{#                        <td>{{ rowData.rank }}</td>#}
+{#                        <td>#}
+{#                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">#}
+{#                        </td>#}
+{#                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>#}
+{#                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>#}
+{#                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#              </table>#}
+{##}
+{#              </div>#}
+{#        </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="col-md-4">#}
+{#        <div class="card bg-dark text-white">#}
+{#        <div class="tab-content">#}
+{##}
+{#              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">#}
+{#                  <h3 class="text-center">Top Changed</h3>#}
+{#                  <table class="table">#}
+{#                <thead>#}
+{#                  <tr>#}
+{#                    <th>Rank</th>#}
+{#                    <th></th>#}
+{#                    <th>Name</th>#}
+{#                    <th>Price</th>#}
+{#                    <th>Change</th>#}
+{#                  </tr>#}
+{#                </thead>#}
+{#                <tbody style="height: max-content">#}
+{#                  {% for rowData in top_changed %}#}
+{#                    <tr>#}
+{#                        <td>{{ rowData.rank }}</td>#}
+{#                        <td>#}
+{#                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">#}
+{#                        </td>#}
+{#                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD' %}">{{ rowData.name }}</a></td>#}
+{#                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>#}
+{#                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#              </table>#}
+{##}
+{#              </div>#}
+{#        </div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="col-md-4">#}
+{#        <div class="card bg-dark text-white">#}
+{#        <div class="tab-content">#}
+{##}
+{#              <div class="tab-pane fade show active" style="padding-top: 1.25rem;" role="tabpanel">#}
+{#                  <h3 class="text-center">Top Priced</h3>#}
+{#                  <table class="table">#}
+{#                <thead>#}
+{#                  <tr>#}
+{#                    <th>Rank</th>#}
+{#                    <th></th>#}
+{#                    <th>Name</th>#}
+{#                    <th>Price</th>#}
+{#                    <th>Change</th>#}
+{#                  </tr>#}
+{#                </thead>#}
+{#                <tbody style="height: max-content">#}
+{#                  {% for rowData in top_priced %}#}
+{#                    <tr>#}
+{#                        <td>{{ rowData.rank }}</td>#}
+{#                        <td>#}
+{#                            <img style="max-width: none;width: 30px" src="{{ rowData.iconUrl }}" alt="{{ rowData.name }} icon">#}
+{#                        </td>#}
+{#                        <td><a href="{% url 'internetProject:coin_details' rowData.uuid rowData.symbol 'USD'%}">{{ rowData.name }}</a></td>#}
+{#                       <td>${{ rowData.price|floatformat:3|intcomma }}</td>#}
+{#                       <td class={{ rowData.changeStatus }}>{{ rowData.change }}</td>#}
+{#                    </tr>#}
+{#                {% endfor %}#}
+{#                </tbody>#}
+{#              </table>#}
+{##}
+{#              </div>#}
+{#        </div>#}
+{#        </div>#}
+{#    </div>#}
 
-
-          </div>
-        </div>
+{#    <br>#}
+{#        <div class="col-md-4">#}
+{#          <div class="markets-capital-item"  style="margin-bottom: 0px;">#}
+{#            <h2>#}
+{#              <img src="{{ top_ranked.0.iconUrl }}" alt="{{ top_ranked.0.symbol }}">#}
+{#              <span>{{ top_ranked.0.symbol }}</span>#}
+{#            </h2>#}
+{#            {% if  top_ranked.0.changeStatus == 'red' %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="red">{{ top_ranked.0.change }} <i class="icon ion-md-arrow-down"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"#}
+{#              data-bg="rgba(255,35,31,.1)" data-border="bd0300">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% else %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="green">+{{ top_ranked.0.change }}<i class="icon ion-md-arrow-up"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"#}
+{#              data-bg="rgba(38,222,129,.1)" data-border="18d877">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% endif %}#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="markets-capital-item" style="margin-bottom: 0px;">#}
+{#            <h2>#}
+{#              <img src="{{ top_changed.0.iconUrl }}" alt="{{ top_changed.0.symbol }}">#}
+{#              <span>{{ top_changed.0.symbol }}</span>#}
+{#            </h2>#}
+{#              {% if  top_changed.0.changeStatus == 'red' %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="red">{{ top_changed.0.change }} <i class="icon ion-md-arrow-down"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"#}
+{#              data-bg="rgba(255,35,31,.1)" data-border="bd0300">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% else %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="green">+{{ top_changed.0.change }}<i class="icon ion-md-arrow-up"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"#}
+{#              data-bg="rgba(38,222,129,.1)" data-border="18d877">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% endif %}#}
+{#          </div>#}
+{#        </div>#}
+{#        <div class="col-md-4">#}
+{#          <div class="markets-capital-item" style="margin-bottom: 0px;">#}
+{#            <h2>#}
+{#              <img src="{{ top_priced.0.iconUrl }}" alt="{{ top_priced.0.symbol }}">#}
+{#              <span>{{ top_priced.0.symbol }}</span>#}
+{#            </h2>#}
+{#          {% if  top_priced.0.changeStatus == 'red' %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="red">{{ top_priced.0.change }} <i class="icon ion-md-arrow-down"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"#}
+{#              data-bg="rgba(255,35,31,.1)" data-border="bd0300">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% else %}#}
+{#            <div class="markets-capital-details">#}
+{#              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>#}
+{#                <h3 class="green">+{{ top_priced.0.change }}<i class="icon ion-md-arrow-up"></i></h3>#}
+{#            </div>#}
+{#            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"#}
+{#              data-bg="rgba(38,222,129,.1)" data-border="18d877">#}
+{#              <canvas></canvas>#}
+{#            </div>#}
+{#          {% endif %}#}
+{##}
+{##}
+{#          </div>#}
+{#        </div>#}
 
     <div class="col-md-12">
           <div class="markets-pair-list">

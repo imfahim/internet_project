@@ -1,0 +1,88 @@
+{% load static %}
+{% load custom_filters %}
+{% load humanize %}
+ <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+
+  <div class="col-md-4">
+          <div class="markets-capital-item"  style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_ranked.0.iconUrl }}" alt="{{ top_ranked.0.symbol }}">
+              <span>{{ top_ranked.0.symbol }}</span>
+            </h2>
+            {% if  top_ranked.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
+                <h3 class="red">{{ top_ranked.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_ranked.0.marketCap|intcomma }}</h4>
+                <h3 class="green">+{{ top_ranked.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_ranked.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="markets-capital-item" style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_changed.0.iconUrl }}" alt="{{ top_changed.0.symbol }}">
+              <span>{{ top_changed.0.symbol }}</span>
+            </h2>
+              {% if  top_changed.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
+                <h3 class="red">{{ top_changed.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_changed.0.marketCap|intcomma }}</h4>
+                <h3 class="green">+{{ top_changed.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_changed.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="markets-capital-item" style="margin-bottom: 0px;">
+            <h2>
+              <img src="{{ top_priced.0.iconUrl }}" alt="{{ top_priced.0.symbol }}">
+              <span>{{ top_priced.0.symbol }}</span>
+            </h2>
+          {% if  top_priced.0.changeStatus == 'red' %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
+                <h3 class="red">{{ top_priced.0.change }} <i class="icon ion-md-arrow-down"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
+              data-bg="rgba(255,35,31,.1)" data-border="bd0300">
+              <canvas></canvas>
+            </div>
+          {% else %}
+            <div class="markets-capital-details">
+              <h4>$ {{ top_priced.0.marketCap|intcomma }}</h4>
+                <h3 class="green">+{{ top_priced.0.change }}<i class="icon ion-md-arrow-up"></i></h3>
+            </div>
+            <div class="markets-capital-chart" data-charts="{{ top_priced.0.sparkline }}"
+              data-bg="rgba(38,222,129,.1)" data-border="18d877">
+              <canvas></canvas>
+            </div>
+          {% endif %}
+
+
+          </div>
+        </div>
