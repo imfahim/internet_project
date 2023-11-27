@@ -8,7 +8,7 @@
         <div class="card bg-dark text-white">
             <div class="card-header row">
                 <div class="col-md-4">
-                    <img style="max-height: 60px;" src="{{ coin_data.iconUrl }}" alt="{{ coin_data.name }} icon">
+                    <img style="max-height: 60px;" src="{{ coin_data.icon_url }}" alt="{{ coin_data.name }} icon">
                     <br>
                      <div class="col-md-8 my-auto" style="margin-left: -12px;">
                     <h3><span class="badge badge-light">{{ coin_data.symbol }}</span></h3>
@@ -16,7 +16,7 @@
                 </div>
 
                 <div class="col-md-8 my-auto">
-                    <h3>{{ latest_rate.close }} <span class="badge badge-light">{{ to_currency }}</span></h3>
+                    <h3>{{ latest_rate.close }} {{ to_currency }}</h3>
                 </div>
 
             </div>
@@ -35,32 +35,32 @@
 
                     <tr>
                         <th>btcPrice</th>
-                        <td>{{ coin_data.btcPrice|floatformat:3 }}</td>
+                        <td>{{ coin_data.btc_price|floatformat:3 }}</td>
                     </tr>
                     <tr>
                         <th>priceAt</th>
-                        <td>{{ coin_data.priceAt }}</td>
+                        <td>{{ coin_data.price_at }}</td>
                     </tr>
 
                     <tr>
                         <th>numberOfMarkets</th>
-                        <td>{{ coin_data.numberOfMarkets }}</td>
+                        <td>{{ coin_data.number_of_markets }}</td>
                     </tr>
                     <tr>
                         <th>numberOfExchanges</th>
-                        <td>{{ coin_data.numberOfExchanges }}</td>
+                        <td>{{ coin_data.number_of_exchanges }}</td>
                     </tr>
                     <tr>
                         <th>24hVolume</th>
-                        <td>{{ coin_data.24hVolume }}</td>
+                        <td>{{ coin_data.volume_24h }}</td>
                     </tr>
                     <tr>
                         <th>marketCap</th>
-                        <td>{{ coin_data.marketCap }}</td>
+                        <td>{{ coin_data.market_cap }}</td>
                     </tr>
                     <tr>
                         <th>fullyDilutedMarketCap</th>
-                        <td>{{ coin_data.fullyDilutedMarketCap }}</td>
+                        <td>{{ coin_data.fully_diluted_market_cap }}</td>
                     </tr>
                     <tr>
                         <th>change</th>
@@ -69,11 +69,11 @@
 
                     <tr>
                         <th>listedAt</th>
-                        <td>{{ coin_data.allTimeHigh.timestamp }}</td>
+                        <td>{{ coin_data.all_time_high_timestamp }}</td>
                     </tr>
                     <tr>
                         <th>websiteUrl</th>
-                        <td><a href="{{ coin_data.websiteUrl }}">{{ coin_data.websiteUrl }}</a></td>
+                        <td><a href="{{ coin_data.website_url }}">{{ coin_data.website_url }}</a></td>
                     </tr>
 
 

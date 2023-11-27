@@ -19,10 +19,9 @@ from internet_project.settings import REQUESTS_CA_BUNDLE
 from .models import Complaint, Feedback, Currency_rate
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
-from .models import Currency_rate
-from .models import Payment #payment model added
+from .models import Currency_rate, CryptoData, CoinDetail, CryptoStateData, Payment
 from _decimal import Decimal
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import copysign
 # import pytz
 import json
@@ -33,6 +32,7 @@ from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, 
 from django.urls import reverse_lazy, reverse
 import pytz
 # import requests
+from django.utils import timezone
 
 from internet_project import settings
 
@@ -93,11 +93,31 @@ def index(request):
         page = 1
 
     offset = (page - 1) * limit
-    api_data = get_crypto_data(limit, offset)
 
-    total_items = api_data['data']['stats']['total']
+    crypto_data_query = CryptoData.objects.filter(limit=limit, offset=offset)
+
+    if crypto_data_query.exists():
+        crypto_data_entry = crypto_data_query.first()
+        coins_data = crypto_data_entry.data
+        total_items = crypto_data_entry.total_items
+
+        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=15):
+            api_data = get_crypto_data(limit, offset)
+            crypto_data_entry.data = api_data['data']['coins']
+            crypto_data_entry.total_items = api_data['data']['stats']['total']
+            crypto_data_entry.last_updated = timezone.now()
+            crypto_data_entry.save()
+            total_items = api_data['data']['stats']['total']
+            coins_data = api_data['data']['coins']
+
+    else:
+        api_data = get_crypto_data(limit, offset)
+        crypto_data = api_data['data']['coins']
+        total_items = api_data['data']['stats']['total']
+        coins_data = api_data['data']['coins']
+        CryptoData.objects.create(total_items=api_data['data']['stats']['total'], last_updated =timezone.now(), limit=limit, offset=offset, data=crypto_data)
+
     total_pages = (total_items + limit - 1) // limit
-    coins_data = api_data['data']['coins']
 
     row_index = (page - 1) * limit + 1
     for rowData in coins_data:
@@ -109,7 +129,7 @@ def index(request):
         timestamp = int(rowData['listedAt'])
         rowData['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
 
-    top_ranked = get_top_ranked()
+    top_ranked = get_top_data("ranking")
     for rowData in top_ranked:
         check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
@@ -117,7 +137,7 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    top_changed = get_top_changed()
+    top_changed = get_top_data("changed")
     for rowData in top_changed:
         check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
@@ -125,7 +145,7 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    top_priced= get_top_priced()
+    top_priced= get_top_data("priced")
     for rowData in top_priced:
         check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
@@ -136,47 +156,83 @@ def index(request):
     return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
 
 def coin_details(request, coin_id, from_currency, to_currency):
-    url = f"https://api.coinranking.com/v2/coin/{coin_id}"
-    response = requests.get(url)
-    api_data = response.json()
-    coin_data = api_data['data']['coin']
-    timestamp = int(coin_data['listedAt'])
-    coin_data['listedAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    timestamp = int(coin_data['priceAt'])
-    coin_data['priceAt'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    timestamp = int(coin_data['allTimeHigh']['timestamp'])
-    coin_data['allTimeHigh']['timestamp'] = datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-
+    coin_data = get_coin_details(coin_id)
     currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     print(data)
     return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
                    'to_currency': to_currency, 'currencys': currencys})
-
 def get_crypto_data(limit, offset):
     url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
     response = requests.get(url)
     data = response.json()
-    print(data)
     return data
 
-def get_top_ranked():
-    url = f"https://api.coinranking.com/v2/coins?limit=3"
-    response = requests.get(url)
-    data = response.json()
-    return data['data']['coins']
+def get_coin_details(coin_id):
+    # Check if data exists in the database
+    try:
+        coin_detail = CoinDetail.objects.get(coin_id=coin_id)
+        # Check if data is not older than 15 minutes
+        if coin_detail.last_updated > timezone.now() - timedelta(minutes=15):
+            return coin_detail
+    except CoinDetail.DoesNotExist:
+        pass  # Continue to fetch data from the API
 
-def get_top_changed():
-    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
+    url = f"https://api.coinranking.com/v2/coin/{coin_id}"
     response = requests.get(url)
-    data = response.json()
-    return data['data']['coins']
+    api_data = response.json()
+    coin_data = api_data['data']['coin']
 
-def get_top_priced():
-    url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=price"
-    response = requests.get(url)
-    data = response.json()
-    return data['data']['coins']
+    coin_detail, created = CoinDetail.objects.update_or_create(
+        coin_id=coin_id,
+        defaults={
+            'name': coin_data['name'],
+            'symbol': coin_data['symbol'],
+            'description': coin_data['description'],
+            'icon_url': coin_data['iconUrl'],
+            'tier': coin_data['tier'],
+            'rank': coin_data['rank'],
+            'price': coin_data['price'],
+            'btc_price': coin_data['btcPrice'],
+            'price_at': datetime.utcfromtimestamp(int(coin_data['priceAt'])).strftime('%Y-%m-%d %H:%M:%S'),
+            'number_of_markets': coin_data['numberOfMarkets'],
+            'number_of_exchanges': coin_data['numberOfExchanges'],
+            'volume_24h': coin_data['24hVolume'],
+            'market_cap': coin_data['marketCap'],
+            'fully_diluted_market_cap': coin_data['fullyDilutedMarketCap'],
+            'change': coin_data['change'],
+            'all_time_high_price': coin_data['allTimeHigh']['price'],
+            'all_time_high_timestamp': datetime.utcfromtimestamp(int(coin_data['allTimeHigh']['timestamp'])).strftime(
+                '%Y-%m-%d %H:%M:%S'),
+            'website_url': coin_data['websiteUrl'],
+            'last_updated': timezone.now(),
+        }
+    )
+
+    return coin_detail
+
+def get_top_data(type):
+    if type == "changed":
+        url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
+    elif type == "priced":
+        url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=price"
+    else:
+        url = f"https://api.coinranking.com/v2/coins?limit=3"
+    crypto_data_query = CryptoStateData.objects.filter(type=type)
+    if crypto_data_query.exists():
+        crypto_data_entry = crypto_data_query.first()
+        if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=15):
+            response = requests.get(url)
+            api_data = response.json()
+            crypto_data_entry.data = api_data['data']['coins']
+            crypto_data_entry.last_updated = timezone.now()
+            crypto_data_entry.save()
+    else:
+        response = requests.get(url)
+        api_data = response.json()
+        crypto_data_entry = api_data['data']['coins']
+        CryptoStateData.objects.create(type=type, last_updated=timezone.now(), data=crypto_data_entry)
+    return crypto_data_entry.data
 
 def print_crypto_info(data):
     response = HttpResponse()
@@ -240,11 +296,11 @@ def signup(request):
 
         if User.objects.filter(username=username):
             messages.error(request, "Username already exists! Please try some other username")
-            return redirect('home')
+            #return redirect('home')
 
         if User.objects.filter(email=email):
             messages.error(request, "Email already registered")
-            return redirect('home')
+            #return redirect('home')
 
         if len(username) > 10:
             messages.error(request, "Passwords didn't match")

@@ -2,6 +2,8 @@ from django.db import models
 
 from django.contrib.auth.models import User
 
+from django.utils import timezone
+from datetime import datetime, timedelta
 
 # Create your models here.
 class Currency_rate(models.Model):
@@ -53,3 +55,47 @@ class Payment(models.Model):
         return f"{self.status} - {self.create_time} - {self.given_name} {self.surname} - {self.email_address} - {self.payer_id} - {self.reference_id} - {self.value} {self.currency_code}"
 
 
+class CryptoData(models.Model):
+    limit = models.IntegerField()
+    offset = models.IntegerField()
+    data = models.JSONField()
+    total_items = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        unique_together = ['limit', 'offset']
+
+class CryptoStateData(models.Model):
+    type = models.CharField(max_length=255)
+    data = models.JSONField()
+    last_updated = models.DateTimeField(default=timezone.now)
+    class Meta:
+        unique_together = ['type']
+
+class CoinDetail(models.Model):
+    coin_id = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=10)
+    description = models.TextField()
+    icon_url = models.URLField()
+    tier = models.IntegerField()
+    rank = models.IntegerField()
+    price = models.FloatField()
+    btc_price = models.FloatField()
+    price_at = models.DateTimeField()
+    number_of_markets = models.IntegerField()
+    number_of_exchanges = models.IntegerField()
+    volume_24h = models.FloatField()
+    market_cap = models.FloatField()
+    fully_diluted_market_cap = models.FloatField()
+    change = models.FloatField()
+    all_time_high_price = models.FloatField()
+    all_time_high_timestamp = models.DateTimeField()
+    last_updated = models.DateTimeField(default=timezone.now)
+    website_url = models.URLField()
+
+    def save(self, *args, **kwargs):
+        # Convert timestamps to datetime objects before saving
+        self.price_at = datetime.strptime(self.price_at, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+        self.all_time_high_timestamp = datetime.strptime(self.all_time_high_timestamp, '%Y-%m-%d %H:%M:%S').strftime('%Y-%m-%d %H:%M:%S')
+        super().save(*args, **kwargs)
