@@ -314,15 +314,6 @@ def about_us(request):
 def faq(request):
     return render(request, "faq.html")
 
-
-def terms(request):
-    return render(request, "terms.html")
-
-
-def request_form(request):
-    return render(request, "request_form.html")
-
-
 def complaint_form(request):
     msg = ''
     if request.method == 'POST':
@@ -392,7 +383,7 @@ def send_email(request):
             msg.send()
 
             # Return a success response if needed
-            return HttpResponse('Email sent successfully!')
+            return render(request, 'index.html', {'message': 'Email sent successfully!'})
         else:
             # Handle the case when the form is not submitted
             return HttpResponse('Form not submitted.')
