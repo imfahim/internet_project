@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 class Currency_rate(models.Model):
@@ -32,3 +34,22 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.title
+
+
+# For the payment
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    given_name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    create_time = models.DateTimeField()
+    email_address = models.EmailField()
+    payer_id = models.CharField(max_length=255)
+    reference_id = models.CharField(max_length=255)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    currency_code = models.CharField(max_length=3)
+
+    def __str__(self):
+        return f"{self.status} - {self.create_time} - {self.given_name} {self.surname} - {self.email_address} - {self.payer_id} - {self.reference_id} - {self.value} {self.currency_code}"
+
+

@@ -20,6 +20,7 @@ from .models import Complaint, Feedback, Currency_rate
 from .forms import ComplaintForm, Feedback
 from .tokens import generate_token
 from .models import Currency_rate
+from .models import Payment #payment model added
 from _decimal import Decimal
 from datetime import datetime
 from math import copysign
@@ -30,10 +31,12 @@ import pytz
 import requests
 from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy, reverse
-# import pytz
+import pytz
 # import requests
 
 from internet_project import settings
+
+home = '/'
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
@@ -292,7 +295,8 @@ def signup(request):
         email.fail_silently = True
         email.send()
 
-        return redirect('internetProject/signin')
+        # return redirect('internetProject/signin')
+        return redirect('internetProject:signin')
 
     return render(request, "internetProject/signup.html")
 
@@ -469,13 +473,115 @@ def get_currency_rate(request, from_currency, to_currency):
 def index_jk(request):
     return render(request, "index_jk.html")
 
-
+@login_required
 def payment(request):
-    return render(request, "templates/payment.html")
+    # Static PayPal JSON response
+    paypal_response = '''
+    {
+        "id": "PAYPAL_TRANSACTION_ID",
+        "intent": "CAPTURE",
+        "status": "COMPLETED",
+        "create_time": "2023-11-23T12:34:56Z",
+        "update_time": "2023-11-23T12:35:00Z",
+        "payer": {
+            "name": {
+                "given_name": "John",
+                "surname": "Doe"
+            },
+            "email_address": "john.doe@example.com",
+            "payer_id": "PAYPAL_PAYER_ID",
+            "address": {
+                "country_code": "US",
+                "postal_code": "12345",
+                "state": "CA",
+                "city": "San Jose",
+                "line1": "123 Main St"
+            }
+        },
+        "purchase_units": [
+            {
+                "reference_id": "REFERENCE_ID",
+                "amount": {
+                    "value": "0.01",
+                    "currency_code": "USD",
+                    "breakdown": {
+                        "item_total": {
+                            "currency_code": "USD",
+                            "value": "0.01"
+                        }
+                    }
+                },
+                "payee": {
+                    "email_address": "merchant@example.com",
+                    "merchant_id": "MERCHANT_ID"
+                },
+                "shipping": {
+                    "address": {
+                        "name": {
+                            "full_name": "John Doe"
+                        },
+                        "address_line_1": "123 Main St",
+                        "admin_area_1": "CA",
+                        "admin_area_2": "San Jose",
+                        "postal_code": "12345",
+                        "country_code": "US"
+                    }
+                }
+            }
+        ]
+    }
+    '''
+
+    # Parse the JSON response
+    response_data = json.loads(paypal_response)
+
+    # Extract relevant details
+    payment_status = response_data.get('status', '')
+    create_time = response_data.get('create_time', '')
+    given_name = response_data.get('payer', {}).get('name', {}).get('given_name', '')
+    surname = response_data.get('payer', {}).get('name', {}).get('surname', '')
+    email_address = response_data.get('payer', {}).get('email_address', '')
+    payer_id = response_data.get('payer', {}).get('payer_id', '')
+    reference_id = response_data.get('purchase_units', [{}])[0].get('reference_id', '')
+    value = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('value', '')
+    currency_code = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('currency_code', '')
+
+    # JSON response to check
+    JsonResponse = ({
+        'status': payment_status,
+        'create_time': create_time,
+        'given_name': given_name,
+        'surname': surname,
+        'email_address': email_address,
+        'payer_id': payer_id,
+        'reference_id': reference_id,
+        'value': value,
+        'currency_code': currency_code
+    })
+
+    # Create a Payment instance and save it to the database
+    payment = Payment.objects.create(
+        user=request.user,
+        payer_id=payer_id,
+        given_name=given_name,
+        surname=surname,
+        email_address=email_address,
+        status=payment_status,
+        reference_id=reference_id,
+        value=value,
+        currency_code=currency_code,
+        create_time=create_time
+    )
+
+    # payment.save() # for saving the Respose
+    output = ("Payment processed and stored successfully.")
+    return render(request, "templates/payment.html",{'output':output,'JsonResponse':JsonResponse})
 
 
+@login_required
+def payment_history(request):
+    payments = Payment.objects.filter(user=request.user) #get the login user payment history
+    return render(request, "templates/payment-history.html",{'payments':payments})
+    # return render(request, "templates/payment-history.html",{'payment':payment})
 
-#view for PayPal Payment Gateway Page
-class PaymentView(TemplateView):
-    template_name = 'paymentPaypal.html'
 
