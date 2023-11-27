@@ -1,19 +1,79 @@
-<!-- myapp/templates/myapp/main_template.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Template</title>
+    <title>CryptoApp - Your Gateway to Digital Currency</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #1a1a1a;
+            color: #ffffff;
+            padding: 1em;
+            text-align: center;
+        }
+
+        section {
+            max-width: 800px;
+            margin: 2em auto;
+            padding: 1em;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #1a1a1a;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db;
+            color: #ffffff;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-    <h1>Main Content</h1>
-    {% csrf_token %}
-    <!-- Your main content here -->
+    <header>
+        <h1>CryptoApp</h1>
+        <p>Your Gateway to Digital Currency</p>
+    </header>
 
-    <!-- Include the footer.html -->
-    {% include 'footer.html' %}
+    <section>
+        <h2>Welcome to CryptoApp</h2>
+        <p>Discover the future of finance with our powerful cryptocurrency app. Buy, sell, and manage your digital assets with ease.</p>
 
-    <!-- Your other content here -->
+        <h3>Key Features:</h3>
+        <ul>
+            <li>Secure Transactions</li>
+            <li>Real-time Market Data</li>
+            <li>User-Friendly Interface</li>
+            <li>24/7 Customer Support</li>
+        </ul>
+
+        <p>Join thousands of users who trust CryptoApp for their cryptocurrency needs. Get started today!</p>
+
+        <a href="#" class="cta-button">Sign Up Now</a>
+    </section>
 </body>
 </html>

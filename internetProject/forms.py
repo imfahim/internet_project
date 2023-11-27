@@ -27,14 +27,31 @@ class AccountDeletionRequestForm(forms.Form):
         required=False
     )
 
+
+from django import forms
+
+
 class ComplaintForm(forms.ModelForm):
     class Meta:
         model = Complaint
         fields = ['title', 'description', 'attachment', 'email', 'contact_number']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Title'}),
+            'description': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter Description'}),
+            'attachment': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
+            'contact_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Contact Number'}),
+        }
+
 
 class Feedback(forms.ModelForm):
     class Meta:
         model = Feedback
         fields = ['title', 'description', 'email']
-
-
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter Title'}),
+            'description': forms.Textarea(
+                attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter Description'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Enter Email'}),
+        }
