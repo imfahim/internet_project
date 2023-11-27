@@ -12,6 +12,12 @@
 <body>
     <div class="center">
         <div class="payment-container">
+            <form id="postForm" style="display: none" action="/payment" method="POST">
+                {% csrf_token %}
+                <!-- Other form elements go here -->
+                <input type="submit" value="Submit">
+            </form>
+
 
             <header class="w3-container w3-blue">
                     <h1>PayPal Payment</h1>
@@ -55,6 +61,17 @@
                                     console.log('Transaction ID: ' + details.id);
                                     console.log('Payer Name: ' + details.payer.name.given_name);
                                     console.log('Payer Email: ' + details.payer.email_address);
+                                    {#setTimeout(function() {#}
+                                    {#    // Redirect to a new page after the action is complete#}
+                                    {#    window.location.href = '/payment';}, 1000); #}// Delay for 1 second (adjust as needed)
+
+
+                                    // Create a form dynamically
+                                    var form = document.getElementById('postForm');
+
+                                    // Append the form to the document and submit it
+                                    {#document.body.appendChild(form);#}
+                                    form.submit();
                                 } else {
                                  // Show a Failed message to the buyer
                                  alert('Transaction failed by Raja' + '--- Transaction ID-' + details.id);

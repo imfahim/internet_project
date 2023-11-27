@@ -701,107 +701,110 @@ class PaymentView(TemplateView):
 
 @login_required
 def payment(request):
-    # Static PayPal JSON response
-    paypal_response = '''
-    {
-        "id": "PAYPAL_TRANSACTION_ID",
-        "intent": "CAPTURE",
-        "status": "COMPLETED",
-        "create_time": "2023-11-23T12:34:56Z",
-        "update_time": "2023-11-23T12:35:00Z",
-        "payer": {
-            "name": {
-                "given_name": "John",
-                "surname": "Doe"
+    if request.method == 'POST':
+        # Static PayPal JSON response
+        paypal_response = '''
+        {
+            "id": "PAYPAL_TRANSACTION_ID",
+            "intent": "CAPTURE",
+            "status": "COMPLETED",
+            "create_time": "2023-11-23T12:34:56Z",
+            "update_time": "2023-11-23T12:35:00Z",
+            "payer": {
+                "name": {
+                    "given_name": "John",
+                    "surname": "Doe"
+                },
+                "email_address": "john.doe@example.com",
+                "payer_id": "PAYPAL_PAYER_ID",
+                "address": {
+                    "country_code": "US",
+                    "postal_code": "12345",
+                    "state": "CA",
+                    "city": "San Jose",
+                    "line1": "123 Main St"
+                }
             },
-            "email_address": "john.doe@example.com",
-            "payer_id": "PAYPAL_PAYER_ID",
-            "address": {
-                "country_code": "US",
-                "postal_code": "12345",
-                "state": "CA",
-                "city": "San Jose",
-                "line1": "123 Main St"
-            }
-        },
-        "purchase_units": [
-            {
-                "reference_id": "REFERENCE_ID",
-                "amount": {
-                    "value": "0.01",
-                    "currency_code": "USD",
-                    "breakdown": {
-                        "item_total": {
-                            "currency_code": "USD",
-                            "value": "0.01"
+            "purchase_units": [
+                {
+                    "reference_id": "REFERENCE_ID",
+                    "amount": {
+                        "value": "0.01",
+                        "currency_code": "USD",
+                        "breakdown": {
+                            "item_total": {
+                                "currency_code": "USD",
+                                "value": "0.01"
+                            }
+                        }
+                    },
+                    "payee": {
+                        "email_address": "merchant@example.com",
+                        "merchant_id": "MERCHANT_ID"
+                    },
+                    "shipping": {
+                        "address": {
+                            "name": {
+                                "full_name": "John Doe"
+                            },
+                            "address_line_1": "123 Main St",
+                            "admin_area_1": "CA",
+                            "admin_area_2": "San Jose",
+                            "postal_code": "12345",
+                            "country_code": "US"
                         }
                     }
-                },
-                "payee": {
-                    "email_address": "merchant@example.com",
-                    "merchant_id": "MERCHANT_ID"
-                },
-                "shipping": {
-                    "address": {
-                        "name": {
-                            "full_name": "John Doe"
-                        },
-                        "address_line_1": "123 Main St",
-                        "admin_area_1": "CA",
-                        "admin_area_2": "San Jose",
-                        "postal_code": "12345",
-                        "country_code": "US"
-                    }
                 }
-            }
-        ]
-    }
-    '''
+            ]
+        }
+        '''
 
-    # Parse the JSON response
-    response_data = json.loads(paypal_response)
+        # Parse the JSON response
+        response_data = json.loads(paypal_response)
 
-    # Extract relevant details
-    payment_status = response_data.get('status', '')
-    create_time = response_data.get('create_time', '')
-    given_name = response_data.get('payer', {}).get('name', {}).get('given_name', '')
-    surname = response_data.get('payer', {}).get('name', {}).get('surname', '')
-    email_address = response_data.get('payer', {}).get('email_address', '')
-    payer_id = response_data.get('payer', {}).get('payer_id', '')
-    reference_id = response_data.get('purchase_units', [{}])[0].get('reference_id', '')
-    value = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('value', '')
-    currency_code = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('currency_code', '')
+        # Extract relevant details
+        payment_status = response_data.get('status', '')
+        create_time = response_data.get('create_time', '')
+        given_name = response_data.get('payer', {}).get('name', {}).get('given_name', '')
+        surname = response_data.get('payer', {}).get('name', {}).get('surname', '')
+        email_address = response_data.get('payer', {}).get('email_address', '')
+        payer_id = response_data.get('payer', {}).get('payer_id', '')
+        reference_id = response_data.get('purchase_units', [{}])[0].get('reference_id', '')
+        value = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('value', '')
+        currency_code = response_data.get('purchase_units', [{}])[0].get('amount', {}).get('currency_code', '')
 
-    # JSON response to check
-    JsonResponse = ({
-        'status': payment_status,
-        'create_time': create_time,
-        'given_name': given_name,
-        'surname': surname,
-        'email_address': email_address,
-        'payer_id': payer_id,
-        'reference_id': reference_id,
-        'value': value,
-        'currency_code': currency_code
-    })
+        # JSON response to check
+        JsonResponse = ({
+            'status': payment_status,
+            'create_time': create_time,
+            'given_name': given_name,
+            'surname': surname,
+            'email_address': email_address,
+            'payer_id': payer_id,
+            'reference_id': reference_id,
+            'value': value,
+            'currency_code': currency_code
+        })
 
-    # Create a Payment instance and save it to the database
-    payment = Payment.objects.create(
-        user=request.user,
-        payer_id=payer_id,
-        given_name=given_name,
-        surname=surname,
-        email_address=email_address,
-        status=payment_status,
-        reference_id=reference_id,
-        value=value,
-        currency_code=currency_code,
-        create_time=create_time
-    )
+        # Create a Payment instance and save it to the database
+        payment = Payment.objects.create(
+            user=request.user,
+            payer_id=payer_id,
+            given_name=given_name,
+            surname=surname,
+            email_address=email_address,
+            status=payment_status,
+            reference_id=reference_id,
+            value=value,
+            currency_code=currency_code,
+            create_time=create_time
+        )
 
-    payment.save() # for saving the Respose
-    output = ("Payment processed and stored successfully.")
-    return render(request, "templates/payment.html",{'output':output,'JsonResponse':JsonResponse})
+        payment.save() # for saving the Respose
+        output = ("Payment processed and stored successfully.")
+        return render(request, "templates/payment.html",{'output':output,'JsonResponse':JsonResponse})
+    else:
+        return render(request, "templates/paymentPaypal.html")
 
 
 @login_required
