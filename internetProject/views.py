@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites import requests
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, EmailMessage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, request
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -28,12 +28,14 @@ import json
 import certifi
 import pytz
 import requests
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, \
+    PasswordResetCompleteView
 from django.urls import reverse_lazy, reverse
 # import pytz
 # import requests
 
 from internet_project import settings
+
 
 class CustomPasswordResetView(PasswordResetView):
     template_name = 'internetProject/password_reset_form.html'
@@ -50,8 +52,10 @@ class CustomPasswordResetView(PasswordResetView):
     #
     #     return super().form_valid(form)
 
+
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'internetProject/password_reset_done.html'
+
 
 # class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 #     template_name = 'internetProject/password_reset_confirm.html'
@@ -76,8 +80,11 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         context['uidb64'] = self.kwargs.get('uidb64', '')
         context['token'] = self.kwargs.get('token', '')
         return context
+
+
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = 'internetProject/password_reset_complete.html'
+
 
 def index(request):
     default_limit = 10
@@ -122,7 +129,7 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    top_priced= get_top_priced()
+    top_priced = get_top_priced()
     for rowData in top_priced:
         check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
@@ -130,7 +137,10 @@ def index(request):
         float_array = [float(x) if x is not None else None for x in rowData['sparkline']]
         rowData['sparkline'] = json.dumps(float_array)
 
-    return render(request, 'internetProject/index.html', {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked, 'top_changed': top_changed, 'top_priced': top_priced})
+    return render(request, 'internetProject/index.html',
+                  {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked,
+                   'top_changed': top_changed, 'top_priced': top_priced})
+
 
 def coin_details(request, coin_id, from_currency, to_currency):
     url = f"https://api.coinranking.com/v2/coin/{coin_id}"
@@ -147,8 +157,11 @@ def coin_details(request, coin_id, from_currency, to_currency):
     currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     print(data)
-    return render(request, 'internetProject/coin_details.html', {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+    return render(request, 'internetProject/coin_details.html',
+                  {'coin_id': coin_id, 'coin_data': coin_data, 'data': data, 'latest_rate': latest_rate,
+                   'from_currency': from_currency,
                    'to_currency': to_currency, 'currencys': currencys})
+
 
 def get_crypto_data(limit, offset):
     url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
@@ -157,11 +170,13 @@ def get_crypto_data(limit, offset):
     print(data)
     return data
 
+
 def get_top_ranked():
     url = f"https://api.coinranking.com/v2/coins?limit=3"
     response = requests.get(url)
     data = response.json()
     return data['data']['coins']
+
 
 def get_top_changed():
     url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=change"
@@ -169,11 +184,13 @@ def get_top_changed():
     data = response.json()
     return data['data']['coins']
 
+
 def get_top_priced():
     url = f"https://api.coinranking.com/v2/coins?limit=3&orderBy=price"
     response = requests.get(url)
     data = response.json()
     return data['data']['coins']
+
 
 def print_crypto_info(data):
     response = HttpResponse()
@@ -193,19 +210,29 @@ def print_crypto_info(data):
 # Create your views here.
 def index2(request):
     fxTableData = [
-        {'id': 1, 'Name': 'Bitcoin','logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': -50000,'twoHrPer': -50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000,'oneHrPer': 50000,'twoHrPer': 50000,'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,'Circulating_Supply': 5},
-        {'id': 3, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 1, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': -50000, 'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,
+         'Circulating_Supply': 5},
+        {'id': 2, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': 50000, 'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5,
+         'Circulating_Supply': 5},
+        {'id': 3, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 4, 'Name': 'Bitcoin',  'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': -50000,
+        {'id': 4, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': -50000,
          'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000, 'twoHrPer': 50000,
+        {'id': 5, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': 50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer': 50000,
+        {'id': 6, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': 50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
-        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000, 'twoHrPer':50000,
+        {'id': 7, 'Name': 'Bitcoin', 'logo': 'https://shorturl.at/kmoqL', 'Price': 50000, 'oneHrPer': -50000,
+         'twoHrPer': 50000,
          'sevenDayPer': -50000, 'Market_Cap': 1000000000000, 'Volume_24h': 5, 'Circulating_Supply': 5},
 
     ]
@@ -215,7 +242,7 @@ def index2(request):
         rowData['change2Status'] = 'positiveChange' if rowData['twoHrPer'] > 0 else 'negativeChange'
         rowData['change7Status'] = 'positiveChange' if rowData['sevenDayPer'] > 0 else 'negativeChange'
 
-    return render(request, 'internetProject/index.html',{'fxTableData':fxTableData})
+    return render(request, 'internetProject/index.html', {'fxTableData': fxTableData})
 
 
 def home(request):
@@ -362,10 +389,6 @@ def feedback_form(request):
     return render(request, 'feedback.html', {'form': form})
 
 
-
-
-
-
 # def send_email(request):
 #     subject = 'Testing mail'
 #     from_email = 'internetproject99@email.com'
@@ -434,15 +457,17 @@ def activate(request, uidb64, token):
 
 @login_required
 def currency_pay(request, coin_id, from_currency, to_currency):
-    return render(request, 'currency_pay.html', {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
+    return render(request, 'currency_pay.html',
+                  {'from_currency': from_currency, 'to_currency': to_currency, 'coin_id': coin_id})
 
 
 def currency(request, from_currency, to_currency):
     currencys = {'USD', 'EUR', 'JPY', 'CAD', 'CNY'}
     data, latest_rate = get_currency_rate(request, from_currency, to_currency)
     print(data)
-    return render(request, 'internetProject/coin_details.html', {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
-                                             'to_currency': to_currency, 'currencys': currencys})
+    return render(request, 'internetProject/coin_details.html',
+                  {'data': data, 'latest_rate': latest_rate, 'from_currency': from_currency,
+                   'to_currency': to_currency, 'currencys': currencys})
 
 
 def get_currency_rate(request, from_currency, to_currency):
@@ -474,7 +499,6 @@ def get_currency_rate(request, from_currency, to_currency):
         return render(request, 'currency.html', {'error': "Error fetching data"})
 
 
-
 def index_jk(request):
     return render(request, "index_jk.html")
 
@@ -483,8 +507,50 @@ def payment(request):
     return render(request, "templates/payment.html")
 
 
-
-#view for PayPal Payment Gateway Page
+# view for PayPal Payment Gateway Page
 class PaymentView(TemplateView):
-    template_name = 'paymentPaypal.html'
 
+    # template_name = 'paymentPaypal.html'
+
+    def get(self, request, from_currency, to_currency, *args, **kwargs):
+        amount = request.GET.get('amount')
+        if amount:
+            data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+            total_price = Decimal(amount) * Decimal(latest_rate['close']).quantize(Decimal('0.00'))
+            context = {
+                'total_price': total_price,
+            }
+            print(context)
+            return render(request, "paymentPaypal.html", context)
+        else:
+            return HttpResponse("Amount is required.", status=400)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request = self.request
+        amount = request.GET.get('amount')
+        print(amount)
+        from_currency = request.GET.get('from_currency')
+        to_currency = request.GET.get('to_currency')
+        data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+        total_price = amount * latest_rate['close']
+        context['total_price'] = total_price
+        print(total_price)
+        print(context)
+        return context
+
+
+def payment_test(request, from_currency, to_currency):
+    if request.method == 'get':
+        # get the amount from the form
+        amount = request.POST.get('amount')
+        # get the currency rate from the API
+        data, latest_rate = get_currency_rate(request, from_currency, to_currency)
+
+        # get the total price by multiplying the amount by the latest rate
+        # (close is the closing price of the currency for the day)
+        total_price = Decimal(amount) * Decimal(latest_rate['close'])
+
+        return render(request, "payment_value_get_test.html",
+                      {'latest_rate': latest_rate, 'from_currency': from_currency, 'to_currency': to_currency,
+                       'amount': amount})

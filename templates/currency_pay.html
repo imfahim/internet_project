@@ -15,9 +15,9 @@
             <div class="flex-container">
                 <div id="content">
 
-                            <a href="{% url 'internetProject:coin_details' coin_id from_currency to_currency %}">
-                                <button type="button"><-</button>
-                            </a>
+                    <a href="{% url 'internetProject:coin_details' coin_id from_currency to_currency %}">
+                        <button class="btn btn-primary" type="button"><-</button>
+                    </a>
                     <div class="card-body">
                         <table class="table table-dark table-striped">
                             <tbody>
@@ -31,15 +31,16 @@
                             </tbody>
                         </table>
                         <br>
-                        <form method="post" action="/payment_test/{{ from_currency }}/{{ to_currency }}/">
-                                {% csrf_token %}
-                                <label for="amount">Amount:</label>
-                                <input type="number" id="amount" name="amount" placeholder="Enter amount"
-                                       oninput="calculate()"> {{ from_currency }}
-                                <div id="result"></div>
-                                <button type="submit">Pay</button>
+                        <form method="get" action="{% url 'internetProject:PaymentView' from_currency to_currency %}">
+                            {% csrf_token %}
+                            <label for="amount">Amount:</label>
+                            <input class="form-control" type="number" id="amount" name="amount"
+                                   placeholder="Enter amount"
+                                   oninput="calculate()"> {{ from_currency }}
+                            <div id="result"></div>
+                                <button class="btn btn-primary" type="submit">Pay</button>
 
-                            </form>
+                        </form>
 
 
                     </div>
