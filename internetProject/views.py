@@ -663,7 +663,7 @@ def activate(request, uidb64, token):
         myuser.is_active = True
         myuser.save()
         login(request, myuser)
-        return redirect('home')
+        return redirect('internetProject:index')
     else:
         return render(request, 'activation_failed.html')
 
