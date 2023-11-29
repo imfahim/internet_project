@@ -108,6 +108,7 @@ def index(request):
     limit = default_limit
 
     page = request.GET.get('page', 1)
+    search = request.GET.get('search', '')
     try:
         page = int(page)
     except (TypeError, ValueError):
@@ -115,7 +116,7 @@ def index(request):
 
     offset = (page - 1) * limit
 
-    crypto_data_query = CryptoData.objects.filter(limit=limit, offset=offset)
+    crypto_data_query = CryptoData.objects.filter(limit=limit, offset=offset, search=search)
 
     if crypto_data_query.exists():
         crypto_data_entry = crypto_data_query.first()
@@ -123,7 +124,7 @@ def index(request):
         total_items = crypto_data_entry.total_items
 
         if timezone.now() - crypto_data_entry.last_updated > timezone.timedelta(minutes=duration):
-            api_data = get_crypto_data(limit, offset)
+            api_data = get_crypto_data(limit, offset, search)
             crypto_data_entry.data = api_data['data']['coins']
             crypto_data_entry.total_items = api_data['data']['stats']['total']
             crypto_data_entry.last_updated = timezone.now()
@@ -132,18 +133,21 @@ def index(request):
             coins_data = api_data['data']['coins']
 
     else:
-        api_data = get_crypto_data(limit, offset)
+        api_data = get_crypto_data(limit, offset, search)
         crypto_data = api_data['data']['coins']
         total_items = api_data['data']['stats']['total']
         coins_data = api_data['data']['coins']
         CryptoData.objects.create(total_items=api_data['data']['stats']['total'], last_updated=timezone.now(),
-                                  limit=limit, offset=offset, data=crypto_data)
+                                  limit=limit, offset=offset, data=crypto_data, search=search)
 
     total_pages = (total_items + limit - 1) // limit
 
     row_index = (page - 1) * limit + 1
     for rowData in coins_data:
-        check_decimal = Decimal(str(rowData['change']))
+        print(rowData['change'])
+        check_decimal = 0
+        if rowData['change'] is not None:
+            check_decimal = Decimal(str(rowData['change']))
         sign = copysign(1, check_decimal)
         rowData['changeStatus'] = 'green' if sign > 0 else 'red'
         rowData['index'] = row_index
@@ -177,7 +181,7 @@ def index(request):
 
     return render(request, 'internetProject/index.html',
                   {'cryptocurrencies': coins_data, 'page': page, 'total_pages': total_pages, 'top_ranked': top_ranked,
-                   'top_changed': top_changed, 'top_priced': top_priced})
+                   'top_changed': top_changed, 'top_priced': top_priced, 'search': search})
 
 
 def coin_details(request, coin_id, from_currency, to_currency):
@@ -191,8 +195,8 @@ def coin_details(request, coin_id, from_currency, to_currency):
                    'to_currency': to_currency, 'currencys': currencys})
 
 
-def get_crypto_data(limit, offset):
-    url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}"
+def get_crypto_data(limit, offset, search):
+    url = f"https://api.coinranking.com/v2/coins?limit={limit}&timePeriod=3h&offset={offset}&search={search}"
     response = requests.get(url)
     data = response.json()
     return data

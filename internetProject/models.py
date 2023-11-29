@@ -67,11 +67,12 @@ class CryptoData(models.Model):
     limit = models.IntegerField()
     offset = models.IntegerField()
     data = models.JSONField()
+    search = models.CharField(max_length=255, default='mi')
     total_items = models.IntegerField(default=0)
     last_updated = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        unique_together = ['limit', 'offset']
+        unique_together = ['limit', 'offset', 'search']
 
 class CryptoStateData(models.Model):
     type = models.CharField(max_length=255)
