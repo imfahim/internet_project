@@ -4,13 +4,47 @@
 
 {% block content %}
 
+
         <div class="container text-center">
-            <h1 style="color: white" class="border-3">
+            <h1 style="color:white" class="border-3">
                     {{ output }}
             </h1>
+{#            <div class="card dark">#}
+        <div class="card-body">
+            <div class="wallet-history">
+              <table class="table">
+                  <thead>
+                        <th> Reference id </th>
+                        <th> Status </th>
+                        <th> Name </th>
+                        <th> Surname </th>
+                        <th> Email </th>
+                        <th> Payer id </th>
+                        <th> Value </th>
+                        <th> Currency </th>
+                  </thead>
+                  <tbody>
+                    <td> {{ JsonResponse.reference_id }} </td>
+                    <td> {{ JsonResponse.status }} </td>
+                    <td> {{ JsonResponse.given_name }} </td>
+                    <td> {{ JsonResponse.surname }} </td>
+                    <td> {{ JsonResponse.email_address }} </td>
+                    <td> {{ JsonResponse.payer_id }} </td>
+                    <td> {{ JsonResponse.value }} </td>
+                    <td> {{ JsonResponse.currency_code }} </td>
+
+                  </tbody>
+              </table>
+              </div>
+        </div>
+{#        </div>#}
+            </div>
+        <div class="container text-center">
             <a href="{% url 'internetProject:payment-history' %}" class="btn btn-outline-info"> Check the Payment</a>
+        </div>
         </div>
         <div class="container">
         </div>
+
 
 {% endblock%}
