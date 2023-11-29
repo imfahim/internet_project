@@ -634,7 +634,7 @@ def send_email(request):
             msg.send()
 
             # Return a success response if needed
-            return render(request, 'index.html', {'message': 'Email sent successfully!'})
+            return render(request, 'internetProject/index.html', {'message': 'Email sent successfully!'})
         else:
             # Handle the case when the form is not submitted
             return HttpResponse('Form not submitted.')
