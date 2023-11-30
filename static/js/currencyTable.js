@@ -82,7 +82,7 @@ ws.onmessage = function (event) {
         const minutes = ('0' + now.getMinutes()).slice(-2);
         const seconds = ('0' + now.getSeconds()).slice(-2);
         const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        document.getElementById('currentRate').innerText = response.PRICE;
+        document.getElementById('currentRate').innerText = response.PRICE.toFixed(2);
         updateChart(response.PRICE, formattedTime);
     }
 };
@@ -115,7 +115,7 @@ function calculate() {
     const amount = amountElement.value;
 
     if (amount !== '' && currentRate) {
-        const result = (amount * currentRate);
+        const result = (amount * currentRate).toFixed(2);
 
         document.getElementById('result').innerText = `${result} ${toCurrency}`;
     } else {

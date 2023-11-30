@@ -32,7 +32,7 @@
                         <br>
                         <form method="get" action="{% url 'internetProject:PaymentView' from_currency to_currency %}">
                             {% csrf_token %}
-                            <label for="amount">Amount:</label>
+                            <label for="amount">Quantities:</label>
                             <input class="form-control" type="number" id="amount" name="amount"
                                    placeholder="Enter amount"
                                    oninput="calculate()"> {{ from_currency }}

@@ -348,14 +348,17 @@ def signup(request):
             return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if len(username) > 10:
-            messages.error(request, "Passwords didn't match")
+            messages.error(request, "The length of username should be less than 10")
+            return HttpResponseRedirect(reverse('internetProject:signup'))
+
 
         if pass1 != pass2:
             messages.error(request, "Passwords didn't match!")
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         if not username.isalnum():
             messages.error(request, "Username must be Alpha-Numeric!")
-            return redirect('home')
+            return HttpResponseRedirect(reverse('internetProject:signup'))
 
         # Create a User instance
         myuser = User.objects.create_user(username, email, pass1)
