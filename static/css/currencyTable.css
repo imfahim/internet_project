@@ -84,3 +84,7 @@ button[type="button"] {
 button[type="button"]:hover {
   background-color: #025aa5;
 }
+
+#currentRate {
+    color: white !important;
+}

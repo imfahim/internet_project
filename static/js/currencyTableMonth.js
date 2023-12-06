@@ -1,5 +1,5 @@
-const labels = historicalData.map(data => new Date(data.time * 1000).toLocaleDateString());
-const data = historicalData.map(data => data.close);
+const labels = historicalData.map(data => new Date(data.time).toLocaleDateString());
+const data = historicalData.map(data => data.rate);
 
 const ctx = document.getElementById('rateCharMonth').getContext('2d');
 const cryptoChart = new Chart(ctx, {

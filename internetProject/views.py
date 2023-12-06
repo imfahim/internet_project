@@ -706,13 +706,30 @@ def get_currency_rate(request, from_currency, to_currency):
         data = response.json()['Data']['Data']
         latest_rate = data[-1]
         for rate in data:
-            timestamp = datetime.fromtimestamp(rate['time'])
-            Currency_rate.objects.create(
-                from_currency=from_currency,
-                to_currency=to_currency,
-                rate=rate['close'],
-                time=timestamp,
-            )
+            timestamp = datetime.fromtimestamp(rate['time']).date()
+            print(timestamp)
+            if not Currency_rate.objects.filter(
+                    from_currency=from_currency,
+                    to_currency=to_currency,
+                    time__date=timestamp
+            ).exists():
+                Currency_rate.objects.create(
+                    from_currency=from_currency,
+                    to_currency=to_currency,
+                    rate=rate['close'],
+                    time=timestamp,
+                )
+        # get query set
+        rates = Currency_rate.objects.filter(
+            from_currency=from_currency,
+            to_currency=to_currency
+        ).values('from_currency', 'to_currency', 'rate', 'time')
+        # convert query set to list
+        data = list(rates)
+        # convert datetime to string
+        for rate in data:
+            rate['time'] = rate['time'].strftime('%Y-%m-%d')
+        # convert list to json
         data = json.dumps(data)
         return data, latest_rate
     else:
